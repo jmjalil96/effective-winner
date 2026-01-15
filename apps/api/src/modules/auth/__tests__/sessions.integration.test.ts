@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions */
 import { describe, it, expect, beforeEach } from 'vitest';
 import supertest from 'supertest';
-import { v7 as uuidv7 } from 'uuid';
+import { uuidv7 } from 'uuidv7';
 import { app } from '../../../app.js';
 import { createTestUser } from '../../../test/fixtures/user.fixture.js';
 import { cleanupDatabase } from '../../../test/helpers/db.js';
