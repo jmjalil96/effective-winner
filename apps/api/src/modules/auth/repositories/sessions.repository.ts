@@ -1,6 +1,6 @@
 import { eq, and, isNull, ne, gt } from 'drizzle-orm';
 import { db } from '../../../db/index.js';
-import { sessions } from '../../../db/schema.js';
+import { sessions } from '../../../db/schema/index.js';
 
 // =============================================================================
 // Interfaces

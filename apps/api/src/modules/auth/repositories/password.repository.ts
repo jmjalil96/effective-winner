@@ -6,7 +6,7 @@ import {
   organizations,
   sessions,
   passwordResetTokens,
-} from '../../../db/schema.js';
+} from '../../../db/schema/index.js';
 
 // =============================================================================
 // Password Reset - Interfaces

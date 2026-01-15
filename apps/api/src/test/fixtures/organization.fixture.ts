@@ -1,6 +1,6 @@
 import { uuidv7 } from 'uuidv7';
 import { getTestDb } from '../setup.js';
-import { organizations } from '../../db/schema.js';
+import { organizations } from '../../db/schema/index.js';
 
 // =============================================================================
 // Types

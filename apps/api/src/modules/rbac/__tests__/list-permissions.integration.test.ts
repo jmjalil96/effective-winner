@@ -8,7 +8,7 @@ import { createTestUser } from '../../../test/fixtures/user.fixture.js';
 import { cleanupDatabase } from '../../../test/helpers/db.js';
 import { loginAndGetCookie, createDirectSession } from '../../../test/helpers/session.js';
 import { getAllPermissions } from '../../../test/helpers/role.js';
-import { users } from '../../../db/schema.js';
+import { users } from '../../../db/schema/index.js';
 import { VALID_PASSWORD } from '../../../test/helpers/crypto.js';
 
 describe('GET /rbac/permissions', () => {

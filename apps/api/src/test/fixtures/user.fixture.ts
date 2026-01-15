@@ -11,7 +11,7 @@ import {
   rolePermissions,
   emailVerificationTokens,
   passwordResetTokens,
-} from '../../db/schema.js';
+} from '../../db/schema/index.js';
 import { getTestPasswordHash } from '../helpers/crypto.js';
 
 // =============================================================================

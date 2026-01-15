@@ -12,7 +12,7 @@ import {
   hashToken,
   markUserDeleted,
 } from '../../../test/helpers/token.js';
-import { organizations, emailVerificationTokens } from '../../../db/schema.js';
+import { organizations, emailVerificationTokens } from '../../../db/schema/index.js';
 
 describe('POST /auth/verify-email', () => {
   beforeEach(async () => {

@@ -14,7 +14,7 @@ import {
   getRoleById,
   assignUserToRole,
 } from '../../../test/helpers/role.js';
-import { users } from '../../../db/schema.js';
+import { users } from '../../../db/schema/index.js';
 import { VALID_PASSWORD } from '../../../test/helpers/crypto.js';
 
 describe('DELETE /rbac/roles/:id', () => {

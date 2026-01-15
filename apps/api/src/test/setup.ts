@@ -3,7 +3,7 @@ import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testconta
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import * as schema from '../db/schema.js';
+import * as schema from '../db/schema/index.js';
 
 // =============================================================================
 // Test Database Singleton

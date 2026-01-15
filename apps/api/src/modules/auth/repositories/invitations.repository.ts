@@ -1,6 +1,6 @@
 import { eq, and, isNull, gt, sql } from 'drizzle-orm';
 import { db } from '../../../db/index.js';
-import { users, profiles, organizations, roles, invitations } from '../../../db/schema.js';
+import { users, profiles, organizations, roles, invitations } from '../../../db/schema/index.js';
 
 // =============================================================================
 // Role Lookup

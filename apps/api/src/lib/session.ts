@@ -8,7 +8,7 @@ import {
   roles,
   rolePermissions,
   permissions,
-} from '../db/schema.js';
+} from '../db/schema/index.js';
 
 export const hashSessionId = (sid: string): string =>
   crypto.createHash('sha256').update(sid).digest('hex');

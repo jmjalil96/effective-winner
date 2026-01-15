@@ -8,7 +8,7 @@ import { getTestDb } from '../../../test/setup.js';
 import { createTestUser } from '../../../test/fixtures/user.fixture.js';
 import { cleanupDatabase } from '../../../test/helpers/db.js';
 import { createTestInvitation, getInvitationById } from '../../../test/helpers/invitation.js';
-import { users, profiles, roles } from '../../../db/schema.js';
+import { users, profiles, roles } from '../../../db/schema/index.js';
 
 describe('POST /auth/accept-invitation', () => {
   beforeEach(async () => {

@@ -14,7 +14,7 @@ import {
   profiles,
   rolePermissions,
   emailVerificationTokens,
-} from '../../../db/schema.js';
+} from '../../../db/schema/index.js';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRY_HOURS } from '../constants.js';
 
 // Get email queue mock

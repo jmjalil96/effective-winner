@@ -15,7 +15,7 @@ import {
   addPermissionsToRole,
   getRolePermissions,
 } from '../../../test/helpers/role.js';
-import { users } from '../../../db/schema.js';
+import { users } from '../../../db/schema/index.js';
 import { VALID_PASSWORD } from '../../../test/helpers/crypto.js';
 
 describe('PUT /rbac/roles/:id/permissions', () => {

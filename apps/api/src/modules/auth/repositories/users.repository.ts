@@ -8,7 +8,7 @@ import {
   rolePermissions,
   permissions,
   sessions,
-} from '../../../db/schema.js';
+} from '../../../db/schema/index.js';
 
 // =============================================================================
 // Interfaces

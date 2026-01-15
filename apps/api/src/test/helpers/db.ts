@@ -10,7 +10,7 @@ import {
   users,
   roles,
   organizations,
-} from '../../db/schema.js';
+} from '../../db/schema/index.js';
 
 /**
  * Tables in dependency order for cleanup (children first).

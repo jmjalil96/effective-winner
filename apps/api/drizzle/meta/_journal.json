@@ -50,6 +50,13 @@
       "when": 1768400000001,
       "tag": "0006_fix_roles_unique_constraint",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1768450062285,
+      "tag": "0007_cooing_the_leader",
+      "breakpoints": true
     }
   ]
 }

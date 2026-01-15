@@ -12,7 +12,7 @@ import {
   getActiveSessionsByUserId,
   getSessionById,
 } from '../../../test/helpers/session.js';
-import { users } from '../../../db/schema.js';
+import { users } from '../../../db/schema/index.js';
 import { VALID_PASSWORD } from '../../../test/helpers/crypto.js';
 
 // Get email queue mock

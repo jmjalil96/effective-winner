@@ -5,7 +5,7 @@ import supertest from 'supertest';
 import { uuidv7 } from 'uuidv7';
 import { app } from '../../app.js';
 import { getTestDb } from '../setup.js';
-import { sessions } from '../../db/schema.js';
+import { sessions } from '../../db/schema/index.js';
 
 // =============================================================================
 // Session Creation via Login

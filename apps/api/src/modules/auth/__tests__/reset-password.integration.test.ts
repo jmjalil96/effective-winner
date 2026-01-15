@@ -12,7 +12,7 @@ import {
   markUserDeleted,
 } from '../../../test/helpers/token.js';
 import { getSessionsByUserId, createDirectSession } from '../../../test/helpers/session.js';
-import { users, organizations } from '../../../db/schema.js';
+import { users, organizations } from '../../../db/schema/index.js';
 
 // Get email queue mock
 import * as emailJobs from '../../../lib/services/email/jobs.js';

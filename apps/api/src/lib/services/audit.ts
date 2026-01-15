@@ -1,6 +1,6 @@
 import type { Request } from 'express';
 import { db } from '../../db/index.js';
-import { auditLogs } from '../../db/schema.js';
+import { auditLogs } from '../../db/schema/index.js';
 import { createChildLogger } from '../../config/logger.js';
 
 const auditLogger = createChildLogger({ module: 'audit' });

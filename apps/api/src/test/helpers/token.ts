@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import crypto from 'node:crypto';
 import { uuidv7 } from 'uuidv7';
 import { getTestDb } from '../setup.js';
-import { emailVerificationTokens, passwordResetTokens, users } from '../../db/schema.js';
+import { emailVerificationTokens, passwordResetTokens, users } from '../../db/schema/index.js';
 
 // =============================================================================
 // Token Generation

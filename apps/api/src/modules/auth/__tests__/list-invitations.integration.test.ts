@@ -9,7 +9,7 @@ import { createTestUser } from '../../../test/fixtures/user.fixture.js';
 import { cleanupDatabase } from '../../../test/helpers/db.js';
 import { loginAndGetCookie, createDirectSession } from '../../../test/helpers/session.js';
 import { createTestInvitation } from '../../../test/helpers/invitation.js';
-import { roles, users } from '../../../db/schema.js';
+import { roles, users } from '../../../db/schema/index.js';
 import { VALID_PASSWORD } from '../../../test/helpers/crypto.js';
 
 describe('GET /auth/invitations', () => {

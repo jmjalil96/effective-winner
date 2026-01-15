@@ -8,7 +8,7 @@ import {
   rolePermissions,
   permissions,
   emailVerificationTokens,
-} from '../../../db/schema.js';
+} from '../../../db/schema/index.js';
 
 // =============================================================================
 // Email Existence Check

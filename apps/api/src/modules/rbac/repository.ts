@@ -1,6 +1,6 @@
 import { eq, and, isNull, sql, inArray, ne } from 'drizzle-orm';
 import { db } from '../../db/index.js';
-import { roles, permissions, rolePermissions, users } from '../../db/schema.js';
+import { roles, permissions, rolePermissions, users } from '../../db/schema/index.js';
 import { AppError } from '../../errors/index.js';
 
 // =============================================================================

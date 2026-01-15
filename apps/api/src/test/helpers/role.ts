@@ -8,7 +8,7 @@ import {
   users,
   type Role,
   type Permission,
-} from '../../db/schema.js';
+} from '../../db/schema/index.js';
 
 // =============================================================================
 // Role Creation
