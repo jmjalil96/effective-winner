@@ -19,9 +19,7 @@ const baseColumns = {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -39,6 +37,8 @@ export const organizations = pgTable('organizations', {
 });
 
 // Roles (per-org)
+// Note: Unique constraint on (organization_id, name) is a partial index WHERE deleted_at IS NULL
+// See migration 0006_fix_roles_unique_constraint.sql
 export const roles = pgTable(
   'roles',
   {
@@ -50,10 +50,7 @@ export const roles = pgTable(
     description: text('description'),
     isDefault: boolean('is_default').notNull().default(false),
   },
-  (table) => [
-    unique('roles_org_name_unique').on(table.organizationId, table.name),
-    index('roles_organization_id_idx').on(table.organizationId),
-  ]
+  (table) => [index('roles_organization_id_idx').on(table.organizationId)]
 );
 
 // Users (auth only)
@@ -73,6 +70,7 @@ export const users = pgTable(
     failedLoginAttempts: integer('failed_login_attempts').notNull().default(0),
     lockedUntil: timestamp('locked_until', { withTimezone: true }),
     passwordChangedAt: timestamp('password_changed_at', { withTimezone: true }),
+    emailVerifiedAt: timestamp('email_verified_at', { withTimezone: true }),
     isActive: boolean('is_active').notNull().default(true),
   },
   (table) => [
@@ -101,9 +99,7 @@ export const permissions = pgTable('permissions', {
     .$defaultFn(() => uuidv7()),
   name: varchar('name', { length: 100 }).notNull().unique(),
   description: text('description'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -123,13 +119,32 @@ export const passwordResetTokens = pgTable(
     tokenHash: varchar('token_hash', { length: 64 }).notNull(),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     usedAt: timestamp('used_at', { withTimezone: true }),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index('password_reset_tokens_user_id_idx').on(table.userId),
     index('password_reset_tokens_token_hash_idx').on(table.tokenHash),
+  ]
+);
+
+// Email Verification Tokens
+export const emailVerificationTokens = pgTable(
+  'email_verification_tokens',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    tokenHash: varchar('token_hash', { length: 64 }).notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    usedAt: timestamp('used_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('email_verification_tokens_user_id_idx').on(table.userId),
+    index('email_verification_tokens_token_hash_idx').on(table.tokenHash),
   ]
 );
 
@@ -154,9 +169,7 @@ export const invitations = pgTable(
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     acceptedAt: timestamp('accepted_at', { withTimezone: true }),
     revokedAt: timestamp('revoked_at', { withTimezone: true }),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index('invitations_organization_id_idx').on(table.organizationId),
@@ -200,9 +213,7 @@ export const auditLogs = pgTable(
     ipAddress: varchar('ip_address', { length: 45 }),
     userAgent: text('user_agent'),
     requestId: varchar('request_id', { length: 100 }),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index('audit_logs_organization_id_idx').on(table.organizationId),
@@ -213,12 +224,48 @@ export const auditLogs = pgTable(
   ]
 );
 
+// Sessions (database-backed)
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
+    // Hashed session ID - raw sid lives only in httpOnly cookie
+    sidHash: varchar('sid_hash', { length: 64 }).notNull().unique(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    // Denormalized for efficient org-level queries
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    // Express-session payload
+    data: jsonb('data').notNull().$type<Record<string, unknown>>(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    // Security context at creation
+    ipAddress: varchar('ip_address', { length: 45 }),
+    userAgent: text('user_agent'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    lastAccessedAt: timestamp('last_accessed_at', { withTimezone: true }).notNull().defaultNow(),
+    // Explicit revocation (null = active, timestamp = revoked)
+    revokedAt: timestamp('revoked_at', { withTimezone: true }),
+  },
+  (table) => [
+    index('sessions_user_id_idx').on(table.userId),
+    index('sessions_organization_id_idx').on(table.organizationId),
+    index('sessions_expires_at_idx').on(table.expiresAt),
+    index('sessions_revoked_at_idx').on(table.revokedAt),
+  ]
+);
+
 // Relations
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   users: many(users),
   roles: many(roles),
   invitations: many(invitations),
   auditLogs: many(auditLogs),
+  sessions: many(sessions),
 }));
 
 export const rolesRelations = relations(roles, ({ one, many }) => ({
@@ -242,8 +289,10 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   }),
   profile: one(profiles),
   passwordResetTokens: many(passwordResetTokens),
+  emailVerificationTokens: many(emailVerificationTokens),
   invitationsSent: many(invitations),
   auditLogs: many(auditLogs),
+  sessions: many(sessions),
 }));
 
 export const profilesRelations = relations(profiles, ({ one }) => ({
@@ -268,15 +317,19 @@ export const rolePermissionsRelations = relations(rolePermissions, ({ one }) => 
   }),
 }));
 
-export const passwordResetTokensRelations = relations(
-  passwordResetTokens,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [passwordResetTokens.userId],
-      references: [users.id],
-    }),
-  })
-);
+export const passwordResetTokensRelations = relations(passwordResetTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [passwordResetTokens.userId],
+    references: [users.id],
+  }),
+}));
+
+export const emailVerificationTokensRelations = relations(emailVerificationTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [emailVerificationTokens.userId],
+    references: [users.id],
+  }),
+}));
 
 export const invitationsRelations = relations(invitations, ({ one }) => ({
   organization: one(organizations, {
@@ -304,6 +357,17 @@ export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
   }),
 }));
 
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
+  organization: one(organizations, {
+    fields: [sessions.organizationId],
+    references: [organizations.id],
+  }),
+}));
+
 // Types
 export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
@@ -317,7 +381,11 @@ export type Permission = typeof permissions.$inferSelect;
 export type NewPermission = typeof permissions.$inferInsert;
 export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 export type NewPasswordResetToken = typeof passwordResetTokens.$inferInsert;
+export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect;
+export type NewEmailVerificationToken = typeof emailVerificationTokens.$inferInsert;
 export type Invitation = typeof invitations.$inferSelect;
 export type NewInvitation = typeof invitations.$inferInsert;
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type NewAuditLog = typeof auditLogs.$inferInsert;
+export type Session = typeof sessions.$inferSelect;
+export type NewSession = typeof sessions.$inferInsert;

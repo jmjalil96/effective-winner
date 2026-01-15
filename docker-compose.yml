@@ -19,6 +19,14 @@ services:
     volumes:
       - redis_data:/data
 
+  inbucket:
+    image: inbucket/inbucket:latest
+    container_name: crm-inbucket
+    ports:
+      - '9050:9000' # Web UI
+      - '2525:2500' # SMTP
+      - '1150:1100' # POP3
+
 volumes:
   postgres_data:
   redis_data:

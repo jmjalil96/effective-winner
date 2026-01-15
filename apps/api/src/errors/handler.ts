@@ -1,8 +1,11 @@
 import type { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
-import { AppError, ValidationError } from './AppError.js';
+import { AppError, ValidationError, ConflictError } from './AppError.js';
 import { logger } from '../config/logger.js';
 import { env } from '../config/env.js';
+
+// Postgres error codes
+const PG_UNIQUE_VIOLATION = '23505';
 
 interface ErrorResponse {
   error: {
@@ -26,6 +29,15 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
       message: issue.message,
     }));
     err = new ValidationError('Validation failed', details);
+  }
+
+  // Convert Postgres unique constraint violations to ConflictError
+  // This handles race conditions where DB constraint fires before app-level check
+  // postgres.js wraps errors with a `cause` property containing the original error
+  const pgCode =
+    (err as { code?: string }).code ?? (err as { cause?: { code?: string } }).cause?.code;
+  if (pgCode === PG_UNIQUE_VIOLATION) {
+    err = new ConflictError('Resource already exists');
   }
 
   // Handle AppError instances

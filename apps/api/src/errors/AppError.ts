@@ -36,3 +36,15 @@ export class ForbiddenError extends AppError {
     super(message, 403, 'FORBIDDEN');
   }
 }
+
+export class ConflictError extends AppError {
+  constructor(message = 'Resource already exists') {
+    super(message, 409, 'CONFLICT');
+  }
+}
+
+export class EmailNotVerifiedError extends AppError {
+  constructor(message = 'Please verify your email address before logging in') {
+    super(message, 403, 'EMAIL_NOT_VERIFIED');
+  }
+}
