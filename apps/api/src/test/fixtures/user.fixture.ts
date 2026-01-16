@@ -47,6 +47,10 @@ export interface CreateUserOptions {
   firstName?: string;
   /** Last name for profile */
   lastName?: string;
+  /** Join existing organization instead of creating new one */
+  organizationId?: string;
+  /** Use existing role instead of creating new one (must be in same org) */
+  roleId?: string;
 }
 
 export interface CreateUserResult {
@@ -73,32 +77,82 @@ export const createTestUser = async (
   const now = new Date();
   const uniqueId = `${String(Date.now())}${Math.random().toString(36).slice(2)}`;
 
-  // Create organization
-  const [org] = await db
-    .insert(organizations)
-    .values({
-      id: uuidv7(),
-      name: options.organizationName ?? 'Test Org',
-      slug: `test-org-${uniqueId}`,
-      deletedAt: options.organizationDeleted ? now : null,
-    })
-    .returning();
+  let org: typeof organizations.$inferSelect;
+  let role: typeof roles.$inferSelect;
 
-  if (!org) throw new Error('Failed to create test organization');
+  // Use existing organization or create new one
+  if (options.organizationId) {
+    const [existingOrg] = await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.id, options.organizationId))
+      .limit(1);
+    if (!existingOrg) throw new Error(`Organization not found: ${options.organizationId}`);
+    org = existingOrg;
+  } else {
+    const [newOrg] = await db
+      .insert(organizations)
+      .values({
+        id: uuidv7(),
+        name: options.organizationName ?? 'Test Org',
+        slug: `test-org-${uniqueId}`,
+        deletedAt: options.organizationDeleted ? now : null,
+      })
+      .returning();
+    if (!newOrg) throw new Error('Failed to create test organization');
+    org = newOrg;
+  }
 
-  // Create role
-  const [role] = await db
-    .insert(roles)
-    .values({
-      id: uuidv7(),
-      organizationId: org.id,
-      name: options.roleName ?? 'Member',
-      description: 'Test role',
-      isDefault: true,
-    })
-    .returning();
-
-  if (!role) throw new Error('Failed to create test role');
+  // Use existing role or create new one
+  if (options.roleId) {
+    const [existingRole] = await db
+      .select()
+      .from(roles)
+      .where(eq(roles.id, options.roleId))
+      .limit(1);
+    if (!existingRole) throw new Error(`Role not found: ${options.roleId}`);
+    if (existingRole.organizationId !== org.id) {
+      throw new Error('Role must belong to the same organization');
+    }
+    role = existingRole;
+  } else if (options.organizationId) {
+    // Joining existing org - find or create a role
+    const [defaultRole] = await db
+      .select()
+      .from(roles)
+      .where(eq(roles.organizationId, org.id))
+      .limit(1);
+    if (defaultRole) {
+      role = defaultRole;
+    } else {
+      const [newRole] = await db
+        .insert(roles)
+        .values({
+          id: uuidv7(),
+          organizationId: org.id,
+          name: options.roleName ?? 'Member',
+          description: 'Test role',
+          isDefault: true,
+        })
+        .returning();
+      if (!newRole) throw new Error('Failed to create test role');
+      role = newRole;
+    }
+  } else {
+    // New org - create new role
+    const [newRole] = await db
+      .insert(roles)
+      .values({
+        id: uuidv7(),
+        organizationId: org.id,
+        name: options.roleName ?? 'Member',
+        description: 'Test role',
+        isDefault: true,
+      })
+      .returning();
+    if (!newRole) throw new Error('Failed to create test role');
+    role = newRole;
+  }
 
   // Create and assign permissions
   if (options.permissionNames?.length) {

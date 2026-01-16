@@ -6,6 +6,7 @@ import {
   text,
   index,
   jsonb,
+  foreignKey,
   uuidv7,
 } from './base.js';
 import { organizations, users, roles } from './core.js';
@@ -19,9 +20,7 @@ export const sessions = pgTable(
       .$defaultFn(() => uuidv7()),
     // Hashed session ID - raw sid lives only in httpOnly cookie
     sidHash: varchar('sid_hash', { length: 64 }).notNull().unique(),
-    userId: uuid('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id').notNull(),
     // Denormalized for efficient org-level queries
     organizationId: uuid('organization_id')
       .notNull()
@@ -42,6 +41,12 @@ export const sessions = pgTable(
     index('sessions_organization_id_idx').on(table.organizationId),
     index('sessions_expires_at_idx').on(table.expiresAt),
     index('sessions_revoked_at_idx').on(table.revokedAt),
+    // Composite FK: user must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.userId],
+      foreignColumns: [users.organizationId, users.id],
+      name: 'sessions_user_same_org_fk',
+    }).onDelete('cascade'),
   ]
 );
 
@@ -98,12 +103,8 @@ export const invitations = pgTable(
       .notNull()
       .references(() => organizations.id, { onDelete: 'cascade' }),
     email: varchar('email', { length: 255 }).notNull(),
-    roleId: uuid('role_id')
-      .notNull()
-      .references(() => roles.id),
-    invitedById: uuid('invited_by_id')
-      .notNull()
-      .references(() => users.id),
+    roleId: uuid('role_id').notNull(),
+    invitedById: uuid('invited_by_id').notNull(),
     tokenHash: varchar('token_hash', { length: 64 }).notNull(),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     acceptedAt: timestamp('accepted_at', { withTimezone: true }),
@@ -114,5 +115,17 @@ export const invitations = pgTable(
     index('invitations_organization_id_idx').on(table.organizationId),
     index('invitations_email_idx').on(table.email),
     index('invitations_token_hash_idx').on(table.tokenHash),
+    // Composite FK: role must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.roleId],
+      foreignColumns: [roles.organizationId, roles.id],
+      name: 'invitations_role_same_org_fk',
+    }),
+    // Composite FK: inviter must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.invitedById],
+      foreignColumns: [users.organizationId, users.id],
+      name: 'invitations_invited_by_same_org_fk',
+    }),
   ]
 );

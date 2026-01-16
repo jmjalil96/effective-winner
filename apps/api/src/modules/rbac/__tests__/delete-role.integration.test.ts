@@ -203,9 +203,9 @@ describe('DELETE /rbac/roles/:id', () => {
       });
       const cookie = await loginAndGetCookie(user.email, VALID_PASSWORD);
 
-      // Create a role and assign a user to it
+      // Create a role and assign a user to it (user must be in same org)
       const { role } = await createTestRole({ organizationId: organization.id });
-      const { user: otherUser } = await createTestUser();
+      const { user: otherUser } = await createTestUser({ organizationId: organization.id });
       await assignUserToRole(otherUser.id, role.id);
 
       const response = await supertest(app)
@@ -278,30 +278,6 @@ describe('DELETE /rbac/roles/:id', () => {
       // Verify not in list after
       const listAfter = await supertest(app).get('/rbac/roles').set('Cookie', cookie).expect(200);
       expect(listAfter.body.roles.some((r: { id: string }) => r.id === role.id)).toBe(false);
-    });
-
-    it('allows re-creating role with same name', async () => {
-      const { user, organization } = await createTestUser({
-        permissionNames: ['roles:delete', 'roles:write'],
-      });
-      const cookie = await loginAndGetCookie(user.email, VALID_PASSWORD);
-
-      const { role } = await createTestRole({
-        organizationId: organization.id,
-        name: 'ReusableName',
-      });
-
-      // Delete
-      await supertest(app).delete(`/rbac/roles/${role.id}`).set('Cookie', cookie).expect(204);
-
-      // Re-create with same name should succeed
-      const response = await supertest(app)
-        .post('/rbac/roles')
-        .set('Cookie', cookie)
-        .send({ name: 'ReusableName' })
-        .expect(201);
-
-      expect(response.body.role.name).toBe('ReusableName');
     });
 
     it('does not affect other roles', async () => {

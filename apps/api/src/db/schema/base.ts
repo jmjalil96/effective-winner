@@ -10,6 +10,7 @@ import {
   index,
   unique,
   jsonb,
+  foreignKey,
 } from 'drizzle-orm/pg-core';
 import { uuidv7 } from 'uuidv7';
 
@@ -39,5 +40,6 @@ export {
   index,
   unique,
   jsonb,
+  foreignKey,
   uuidv7,
 };

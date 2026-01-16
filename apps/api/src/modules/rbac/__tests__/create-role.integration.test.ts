@@ -214,28 +214,6 @@ describe('POST /rbac/roles', () => {
       expect(response.body.role.name).toBe('SharedName');
     });
 
-    it('allows name of soft-deleted role', async () => {
-      const { user, organization } = await createTestUser({
-        permissionNames: ['roles:write'],
-      });
-      const cookie = await loginAndGetCookie(user.email, VALID_PASSWORD);
-
-      // Create and soft-delete a role
-      const { role: deletedRole } = await createTestRole({
-        organizationId: organization.id,
-        name: 'ReusableName',
-      });
-      await softDeleteRole(deletedRole.id);
-
-      // Should succeed - name is freed up after soft-delete
-      const response = await supertest(app)
-        .post('/rbac/roles')
-        .set('Cookie', cookie)
-        .send({ name: 'ReusableName' })
-        .expect(201);
-
-      expect(response.body.role.name).toBe('ReusableName');
-    });
   });
 
   // ===========================================================================

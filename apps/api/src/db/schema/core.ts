@@ -11,6 +11,7 @@ import {
   index,
   unique,
   jsonb,
+  foreignKey,
   uuidv7,
 } from './base.js';
 
@@ -24,8 +25,6 @@ export const organizations = pgTable('organizations', {
 });
 
 // Roles (per-org)
-// Note: Unique constraint on (organization_id, name) is a partial index WHERE deleted_at IS NULL
-// See migration 0006_fix_roles_unique_constraint.sql
 export const roles = pgTable(
   'roles',
   {
@@ -37,7 +36,12 @@ export const roles = pgTable(
     description: text('description'),
     isDefault: boolean('is_default').notNull().default(false),
   },
-  (table) => [index('roles_organization_id_idx').on(table.organizationId)]
+  (table) => [
+    index('roles_organization_id_idx').on(table.organizationId),
+    // Composite unique for tenant-isolated FK references
+    unique('roles_org_id_key').on(table.organizationId, table.id),
+    unique('roles_org_name_unique').on(table.organizationId, table.name),
+  ]
 );
 
 // Users (auth only)
@@ -48,9 +52,7 @@ export const users = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    roleId: uuid('role_id')
-      .notNull()
-      .references(() => roles.id),
+    roleId: uuid('role_id').notNull(),
     email: varchar('email', { length: 255 }).notNull(),
     passwordHash: varchar('password_hash', { length: 255 }),
     lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
@@ -61,9 +63,17 @@ export const users = pgTable(
     isActive: boolean('is_active').notNull().default(true),
   },
   (table) => [
-    unique('users_email_unique').on(table.email),
     index('users_organization_id_idx').on(table.organizationId),
     index('users_role_id_idx').on(table.roleId),
+    // Composite unique for tenant-isolated FK references
+    unique('users_org_id_key').on(table.organizationId, table.id),
+    unique('users_email_unique').on(table.email),
+    // Composite FK: role must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.roleId],
+      foreignColumns: [roles.organizationId, roles.id],
+      name: 'users_role_same_org_fk',
+    }),
   ]
 );
 

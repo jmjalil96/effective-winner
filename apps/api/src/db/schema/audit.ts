@@ -6,6 +6,7 @@ import {
   text,
   index,
   jsonb,
+  foreignKey,
   uuidv7,
 } from './base.js';
 import { organizations, users } from './core.js';
@@ -20,9 +21,7 @@ export const auditLogs = pgTable(
     organizationId: uuid('organization_id').references(() => organizations.id, {
       onDelete: 'set null',
     }),
-    actorId: uuid('actor_id').references(() => users.id, {
-      onDelete: 'set null',
-    }),
+    actorId: uuid('actor_id'),
     action: varchar('action', { length: 100 }).notNull(),
     entityType: varchar('entity_type', { length: 50 }),
     entityId: uuid('entity_id'),
@@ -39,5 +38,11 @@ export const auditLogs = pgTable(
     index('audit_logs_action_idx').on(table.action),
     index('audit_logs_entity_idx').on(table.entityType, table.entityId),
     index('audit_logs_created_at_idx').on(table.createdAt),
+    // Composite FK: actor must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.actorId],
+      foreignColumns: [users.organizationId, users.id],
+      name: 'audit_logs_actor_same_org_fk',
+    }).onDelete('set null'),
   ]
 );

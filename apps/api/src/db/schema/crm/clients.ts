@@ -8,6 +8,7 @@ import {
   boolean,
   index,
   unique,
+  foreignKey,
 } from '../base.js';
 import { organizations } from '../core.js';
 
@@ -32,9 +33,11 @@ export const agents = pgTable(
   },
   (table) => [
     index('agents_organization_id_idx').on(table.organizationId),
-    unique('agents_org_agent_id_unique').on(table.organizationId, table.agentId),
     index('agents_status_idx').on(table.status),
     index('agents_is_house_agent_idx').on(table.isHouseAgent),
+    // Composite unique for tenant-isolated FK references
+    unique('agents_org_id_key').on(table.organizationId, table.id),
+    unique('agents_org_agent_id_unique').on(table.organizationId, table.agentId),
   ]
 );
 
@@ -46,9 +49,7 @@ export const accounts = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    agentId: uuid('agent_id')
-      .notNull()
-      .references(() => agents.id),
+    agentId: uuid('agent_id').notNull(),
     name: varchar('name', { length: 255 }).notNull(),
     status: varchar('status', { length: 20 }).notNull().default('active'),
   },
@@ -56,6 +57,14 @@ export const accounts = pgTable(
     index('accounts_organization_id_idx').on(table.organizationId),
     index('accounts_agent_id_idx').on(table.agentId),
     index('accounts_status_idx').on(table.status),
+    // Composite unique for tenant-isolated FK references
+    unique('accounts_org_id_key').on(table.organizationId, table.id),
+    // Composite FK: agent must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.agentId],
+      foreignColumns: [agents.organizationId, agents.id],
+      name: 'accounts_agent_same_org_fk',
+    }),
   ]
 );
 
@@ -67,9 +76,7 @@ export const clients = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    accountId: uuid('account_id')
-      .notNull()
-      .references(() => accounts.id),
+    accountId: uuid('account_id').notNull(),
     clientType: varchar('client_type', { length: 20 }).notNull(),
     name: varchar('name', { length: 255 }).notNull(),
     firstName: varchar('first_name', { length: 255 }),
@@ -88,6 +95,14 @@ export const clients = pgTable(
     index('clients_account_id_idx').on(table.accountId),
     index('clients_client_type_idx').on(table.clientType),
     index('clients_status_idx').on(table.status),
+    // Composite unique for tenant-isolated FK references
+    unique('clients_org_id_key').on(table.organizationId, table.id),
+    // Composite FK: account must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.accountId],
+      foreignColumns: [accounts.organizationId, accounts.id],
+      name: 'clients_account_same_org_fk',
+    }),
   ]
 );
 
@@ -99,9 +114,7 @@ export const clientContacts = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    clientId: uuid('client_id')
-      .notNull()
-      .references(() => clients.id),
+    clientId: uuid('client_id').notNull(),
     name: varchar('name', { length: 255 }).notNull(),
     email: varchar('email', { length: 255 }),
     phone: varchar('phone', { length: 50 }),
@@ -110,5 +123,11 @@ export const clientContacts = pgTable(
   (table) => [
     index('client_contacts_organization_id_idx').on(table.organizationId),
     index('client_contacts_client_id_idx').on(table.clientId),
+    // Composite FK: client must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.clientId],
+      foreignColumns: [clients.organizationId, clients.id],
+      name: 'client_contacts_client_same_org_fk',
+    }),
   ]
 );

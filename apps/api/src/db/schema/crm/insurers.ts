@@ -6,6 +6,8 @@ import {
   varchar,
   text,
   index,
+  unique,
+  foreignKey,
   uuidv7,
 } from '../base.js';
 import { organizations } from '../core.js';
@@ -44,6 +46,8 @@ export const insurers = pgTable(
   (table) => [
     index('insurers_organization_id_idx').on(table.organizationId),
     index('insurers_status_idx').on(table.status),
+    // Composite unique for tenant-isolated FK references
+    unique('insurers_org_id_key').on(table.organizationId, table.id),
   ]
 );
 
@@ -55,9 +59,7 @@ export const insurerContacts = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    insurerId: uuid('insurer_id')
-      .notNull()
-      .references(() => insurers.id),
+    insurerId: uuid('insurer_id').notNull(),
     name: varchar('name', { length: 255 }).notNull(),
     email: varchar('email', { length: 255 }),
     phone: varchar('phone', { length: 50 }),
@@ -66,6 +68,12 @@ export const insurerContacts = pgTable(
   (table) => [
     index('insurer_contacts_organization_id_idx').on(table.organizationId),
     index('insurer_contacts_insurer_id_idx').on(table.insurerId),
+    // Composite FK: insurer must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.insurerId],
+      foreignColumns: [insurers.organizationId, insurers.id],
+      name: 'insurer_contacts_insurer_same_org_fk',
+    }),
   ]
 );
 
@@ -77,9 +85,7 @@ export const products = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    insurerId: uuid('insurer_id')
-      .notNull()
-      .references(() => insurers.id),
+    insurerId: uuid('insurer_id').notNull(),
     insuranceTypeId: uuid('insurance_type_id')
       .notNull()
       .references(() => insuranceTypes.id),
@@ -93,5 +99,13 @@ export const products = pgTable(
     index('products_insurer_id_idx').on(table.insurerId),
     index('products_insurance_type_id_idx').on(table.insuranceTypeId),
     index('products_status_idx').on(table.status),
+    // Composite unique for tenant-isolated FK references
+    unique('products_org_id_key').on(table.organizationId, table.id),
+    // Composite FK: insurer must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.insurerId],
+      foreignColumns: [insurers.organizationId, insurers.id],
+      name: 'products_insurer_same_org_fk',
+    }),
   ]
 );

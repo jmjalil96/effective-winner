@@ -10,6 +10,7 @@ import {
   decimal,
   index,
   unique,
+  foreignKey,
 } from '../base.js';
 import { organizations } from '../core.js';
 import { insurers, products } from './insurers.js';
@@ -24,9 +25,7 @@ export const commissionStatements = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    insurerId: uuid('insurer_id')
-      .notNull()
-      .references(() => insurers.id),
+    insurerId: uuid('insurer_id').notNull(),
     statementId: varchar('statement_id', { length: 100 }).notNull(),
     dateReceived: timestamp('date_received', { withTimezone: true }).notNull(),
     commercialUnit: varchar('commercial_unit', { length: 100 }),
@@ -47,6 +46,20 @@ export const commissionStatements = pgTable(
     index('commission_statements_related_statement_id_idx').on(table.relatedStatementId),
     index('commission_statements_reconciliation_status_idx').on(table.reconciliationStatus),
     index('commission_statements_date_received_idx').on(table.dateReceived),
+    // Composite unique for tenant-isolated FK references
+    unique('commission_statements_org_id_key').on(table.organizationId, table.id),
+    // Composite FK: insurer must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.insurerId],
+      foreignColumns: [insurers.organizationId, insurers.id],
+      name: 'commission_statements_insurer_same_org_fk',
+    }),
+    // Composite FK: related statement must be from same organization (self-ref)
+    foreignKey({
+      columns: [table.organizationId, table.relatedStatementId],
+      foreignColumns: [table.organizationId, table.id],
+      name: 'commission_statements_related_same_org_fk',
+    }),
   ]
 );
 
@@ -58,9 +71,7 @@ export const agentStatements = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    agentId: uuid('agent_id')
-      .notNull()
-      .references(() => agents.id),
+    agentId: uuid('agent_id').notNull(),
     date: timestamp('date', { withTimezone: true }).notNull(),
     validationStatus: varchar('validation_status', { length: 20 }).notNull().default('pending'),
     sent: boolean('sent').notNull().default(false),
@@ -75,6 +86,14 @@ export const agentStatements = pgTable(
     index('agent_statements_date_idx').on(table.date),
     index('agent_statements_validation_status_idx').on(table.validationStatus),
     index('agent_statements_payment_status_idx').on(table.paymentStatus),
+    // Composite unique for tenant-isolated FK references
+    unique('agent_statements_org_id_key').on(table.organizationId, table.id),
+    // Composite FK: agent must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.agentId],
+      foreignColumns: [agents.organizationId, agents.id],
+      name: 'agent_statements_agent_same_org_fk',
+    }),
   ]
 );
 
@@ -86,12 +105,8 @@ export const commissionRates = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    primaryAgentId: uuid('primary_agent_id')
-      .notNull()
-      .references(() => agents.id),
-    productId: uuid('product_id')
-      .notNull()
-      .references(() => products.id),
+    primaryAgentId: uuid('primary_agent_id').notNull(),
+    productId: uuid('product_id').notNull(),
     businessType: varchar('business_type', { length: 20 }).notNull(),
     effectiveFrom: timestamp('effective_from', { withTimezone: true }).notNull(),
     effectiveTo: timestamp('effective_to', { withTimezone: true }),
@@ -102,6 +117,8 @@ export const commissionRates = pgTable(
     index('commission_rates_product_id_idx').on(table.productId),
     index('commission_rates_business_type_idx').on(table.businessType),
     index('commission_rates_effective_from_idx').on(table.effectiveFrom),
+    // Composite unique for tenant-isolated FK references
+    unique('commission_rates_org_id_key').on(table.organizationId, table.id),
     unique('commission_rates_unique').on(
       table.organizationId,
       table.primaryAgentId,
@@ -109,6 +126,18 @@ export const commissionRates = pgTable(
       table.businessType,
       table.effectiveFrom
     ),
+    // Composite FK: agent must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.primaryAgentId],
+      foreignColumns: [agents.organizationId, agents.id],
+      name: 'commission_rates_agent_same_org_fk',
+    }),
+    // Composite FK: product must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.productId],
+      foreignColumns: [products.organizationId, products.id],
+      name: 'commission_rates_product_same_org_fk',
+    }),
   ]
 );
 
@@ -120,12 +149,8 @@ export const commissionRateSplits = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    commissionRateId: uuid('commission_rate_id')
-      .notNull()
-      .references(() => commissionRates.id),
-    beneficiaryAgentId: uuid('beneficiary_agent_id')
-      .notNull()
-      .references(() => agents.id),
+    commissionRateId: uuid('commission_rate_id').notNull(),
+    beneficiaryAgentId: uuid('beneficiary_agent_id').notNull(),
     rate: decimal('rate', { precision: 5, scale: 4 }).notNull(),
     splitOrder: integer('split_order').notNull().default(1),
   },
@@ -134,6 +159,18 @@ export const commissionRateSplits = pgTable(
     index('commission_rate_splits_commission_rate_id_idx').on(table.commissionRateId),
     index('commission_rate_splits_beneficiary_agent_id_idx').on(table.beneficiaryAgentId),
     unique('commission_rate_splits_unique').on(table.commissionRateId, table.beneficiaryAgentId),
+    // Composite FK: commission rate must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.commissionRateId],
+      foreignColumns: [commissionRates.organizationId, commissionRates.id],
+      name: 'commission_rate_splits_rate_same_org_fk',
+    }),
+    // Composite FK: beneficiary agent must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.beneficiaryAgentId],
+      foreignColumns: [agents.organizationId, agents.id],
+      name: 'commission_rate_splits_agent_same_org_fk',
+    }),
   ]
 );
 
@@ -145,16 +182,10 @@ export const agentCommissions = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    commissionStatementId: uuid('commission_statement_id')
-      .notNull()
-      .references(() => commissionStatements.id),
-    policyId: uuid('policy_id')
-      .notNull()
-      .references(() => policies.id),
-    agentId: uuid('agent_id')
-      .notNull()
-      .references(() => agents.id),
-    agentStatementId: uuid('agent_statement_id').references(() => agentStatements.id),
+    commissionStatementId: uuid('commission_statement_id').notNull(),
+    policyId: uuid('policy_id').notNull(),
+    agentId: uuid('agent_id').notNull(),
+    agentStatementId: uuid('agent_statement_id'),
     totalPremium: decimal('total_premium', { precision: 12, scale: 2 }),
     prorataPremium: decimal('prorata_premium', { precision: 12, scale: 2 }),
     commissionRate: decimal('commission_rate', { precision: 5, scale: 4 }),
@@ -169,5 +200,29 @@ export const agentCommissions = pgTable(
     index('agent_commissions_agent_id_idx').on(table.agentId),
     index('agent_commissions_agent_statement_id_idx').on(table.agentStatementId),
     index('agent_commissions_commission_type_idx').on(table.commissionType),
+    // Composite FK: commission statement must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.commissionStatementId],
+      foreignColumns: [commissionStatements.organizationId, commissionStatements.id],
+      name: 'agent_commissions_statement_same_org_fk',
+    }),
+    // Composite FK: policy must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.policyId],
+      foreignColumns: [policies.organizationId, policies.id],
+      name: 'agent_commissions_policy_same_org_fk',
+    }),
+    // Composite FK: agent must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.agentId],
+      foreignColumns: [agents.organizationId, agents.id],
+      name: 'agent_commissions_agent_same_org_fk',
+    }),
+    // Composite FK: agent statement must be from same organization (nullable)
+    foreignKey({
+      columns: [table.organizationId, table.agentStatementId],
+      foreignColumns: [agentStatements.organizationId, agentStatements.id],
+      name: 'agent_commissions_agent_statement_same_org_fk',
+    }),
   ]
 );

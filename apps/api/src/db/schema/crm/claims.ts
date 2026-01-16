@@ -7,6 +7,8 @@ import {
   text,
   decimal,
   index,
+  unique,
+  foreignKey,
 } from '../base.js';
 import { organizations } from '../core.js';
 import { policies } from './policies.js';
@@ -19,9 +21,7 @@ export const healthClaims = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    policyId: uuid('policy_id')
-      .notNull()
-      .references(() => policies.id),
+    policyId: uuid('policy_id').notNull(),
     claimId: varchar('claim_id', { length: 100 }).notNull(),
     claimType: varchar('claim_type', { length: 20 }).notNull(),
     relatedClaimId: uuid('related_claim_id'),
@@ -41,6 +41,20 @@ export const healthClaims = pgTable(
     index('health_claims_related_claim_id_idx').on(table.relatedClaimId),
     index('health_claims_status_idx').on(table.status),
     index('health_claims_submitted_date_idx').on(table.submittedDate),
+    // Composite unique for tenant-isolated FK references
+    unique('health_claims_org_id_key').on(table.organizationId, table.id),
+    // Composite FK: policy must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.policyId],
+      foreignColumns: [policies.organizationId, policies.id],
+      name: 'health_claims_policy_same_org_fk',
+    }),
+    // Composite FK: related claim must be from same organization (self-ref)
+    foreignKey({
+      columns: [table.organizationId, table.relatedClaimId],
+      foreignColumns: [table.organizationId, table.id],
+      name: 'health_claims_related_same_org_fk',
+    }),
   ]
 );
 
@@ -52,9 +66,7 @@ export const pcClaims = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
-    policyId: uuid('policy_id')
-      .notNull()
-      .references(() => policies.id),
+    policyId: uuid('policy_id').notNull(),
     claimId: varchar('claim_id', { length: 100 }).notNull(),
     insurerClaimNumber: varchar('insurer_claim_number', { length: 100 }),
     status: varchar('status', { length: 20 }).notNull().default('pending'),
@@ -69,5 +81,11 @@ export const pcClaims = pgTable(
     index('pc_claims_policy_id_idx').on(table.policyId),
     index('pc_claims_status_idx').on(table.status),
     index('pc_claims_submitted_date_idx').on(table.submittedDate),
+    // Composite FK: policy must be from same organization
+    foreignKey({
+      columns: [table.organizationId, table.policyId],
+      foreignColumns: [policies.organizationId, policies.id],
+      name: 'pc_claims_policy_same_org_fk',
+    }),
   ]
 );
