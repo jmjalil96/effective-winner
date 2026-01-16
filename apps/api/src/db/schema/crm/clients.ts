@@ -1,16 +1,36 @@
+import { sql } from 'drizzle-orm';
+import { primaryKey } from 'drizzle-orm/pg-core';
 import {
   baseColumns,
   pgTable,
   uuid,
-  timestamp,
   varchar,
   text,
   boolean,
+  integer,
   index,
   unique,
+  uniqueIndex,
   foreignKey,
+  date,
 } from '../base.js';
 import { organizations } from '../core.js';
+
+// =============================================================================
+// ID Counters (for auto-generated IDs)
+// =============================================================================
+
+export const idCounters = pgTable(
+  'id_counters',
+  {
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    entityType: varchar('entity_type', { length: 50 }).notNull(),
+    lastValue: integer('last_value').notNull().default(0),
+  },
+  (table) => [primaryKey({ columns: [table.organizationId, table.entityType] })]
+);
 
 // Agents
 export const agents = pgTable(
@@ -27,7 +47,7 @@ export const agents = pgTable(
     govIdNumber: varchar('gov_id_number', { length: 20 }),
     email: varchar('email', { length: 255 }),
     phone: varchar('phone', { length: 50 }),
-    dob: timestamp('dob', { withTimezone: true }),
+    dob: date('dob', { mode: 'string' }),
     status: varchar('status', { length: 20 }).notNull().default('active'),
     isHouseAgent: boolean('is_house_agent').notNull().default(false),
   },
@@ -38,6 +58,14 @@ export const agents = pgTable(
     // Composite unique for tenant-isolated FK references
     unique('agents_org_id_key').on(table.organizationId, table.id),
     unique('agents_org_agent_id_unique').on(table.organizationId, table.agentId),
+    // Case-insensitive email uniqueness per org (partial index for non-null, non-deleted)
+    uniqueIndex('agents_org_email_unique')
+      .on(table.organizationId, sql`lower(${table.email})`)
+      .where(sql`${table.email} IS NOT NULL AND ${table.deletedAt} IS NULL`),
+    // Only one house agent per organization (partial index for house agents, non-deleted)
+    uniqueIndex('agents_org_house_agent_unique')
+      .on(table.organizationId)
+      .where(sql`${table.isHouseAgent} = true AND ${table.deletedAt} IS NULL`),
   ]
 );
 
@@ -86,7 +114,7 @@ export const clients = pgTable(
     phone: varchar('phone', { length: 50 }),
     email: varchar('email', { length: 255 }),
     sex: varchar('sex', { length: 10 }),
-    dob: timestamp('dob', { withTimezone: true }),
+    dob: date('dob', { mode: 'string' }),
     businessDescription: text('business_description'),
     status: varchar('status', { length: 20 }).notNull().default('active'),
   },

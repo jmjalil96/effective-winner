@@ -24,3 +24,13 @@ export type {
   UpdateRoleResponse,
   SetRolePermissionsResponse,
 } from './rbac.js';
+
+// Agents
+export type {
+  Agent,
+  CreateAgentResponse,
+  GetAgentResponse,
+  UpdateAgentResponse,
+  PaginationMeta,
+  ListAgentsResponse,
+} from './agents.js';

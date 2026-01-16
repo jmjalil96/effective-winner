@@ -48,6 +48,11 @@ export const AUDIT_ACTIONS = {
   SESSION_CREATE: 'session:create',
   SESSION_REVOKE: 'session:revoke',
   SESSION_REVOKE_ALL: 'session:revoke_all',
+
+  // Agent
+  AGENT_CREATE: 'agent:create',
+  AGENT_UPDATE: 'agent:update',
+  AGENT_DELETE: 'agent:delete',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

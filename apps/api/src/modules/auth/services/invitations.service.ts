@@ -262,6 +262,8 @@ export const acceptInvitation = async (
 export interface ListInvitationsContext {
   organizationId: string;
   actorId: string;
+  ipAddress: string | null;
+  userAgent: string | null;
   requestId: string | null;
 }
 

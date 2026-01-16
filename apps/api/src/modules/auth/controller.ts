@@ -12,7 +12,7 @@ import type {
   UpdateProfileInput,
   InvitationIdParam,
 } from '@crm/shared';
-import { extractRequestMeta } from '../../lib/utils.js';
+import { extractRequestMeta, getValidated } from '../../lib/utils.js';
 import { SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from './constants.js';
 import {
   login,
@@ -63,7 +63,7 @@ import { UnauthorizedError } from '../../errors/index.js';
 
 export const loginHandler: RequestHandler = async (req, res, next) => {
   try {
-    const input = req.body as LoginInput;
+    const input = getValidated(req).body as LoginInput;
     const ctx: LoginContext = extractRequestMeta(req);
     const { response, sessionId, maxAgeMs } = await login(input, ctx);
 
@@ -126,7 +126,7 @@ export const logoutHandler: RequestHandler = async (req, res, next) => {
 
 export const forgotPasswordHandler: RequestHandler = async (req, res, next) => {
   try {
-    const input = req.body as ForgotPasswordInput;
+    const input = getValidated(req).body as ForgotPasswordInput;
     const ctx: ForgotPasswordContext = extractRequestMeta(req);
 
     await forgotPassword(input, ctx);
@@ -139,7 +139,7 @@ export const forgotPasswordHandler: RequestHandler = async (req, res, next) => {
 
 export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
   try {
-    const input = req.body as ResetPasswordInput;
+    const input = getValidated(req).body as ResetPasswordInput;
     const ctx: ResetPasswordContext = extractRequestMeta(req);
 
     await resetPassword(input, ctx);
@@ -156,7 +156,7 @@ export const changePasswordHandler: RequestHandler = async (req, res, next) => {
       throw new UnauthorizedError('Authentication required');
     }
 
-    const input = req.body as ChangePasswordInput;
+    const input = getValidated(req).body as ChangePasswordInput;
 
     const ctx: ChangePasswordContext = {
       userId: req.ctx.user.id,
@@ -175,7 +175,7 @@ export const changePasswordHandler: RequestHandler = async (req, res, next) => {
 
 export const registerHandler: RequestHandler = async (req, res, next) => {
   try {
-    const input = req.body as RegisterInput;
+    const input = getValidated(req).body as RegisterInput;
     const ctx: RegisterContext = extractRequestMeta(req);
 
     await register(input, ctx);
@@ -190,7 +190,7 @@ export const registerHandler: RequestHandler = async (req, res, next) => {
 
 export const verifyEmailHandler: RequestHandler = async (req, res, next) => {
   try {
-    const input = req.body as VerifyEmailInput;
+    const input = getValidated(req).body as VerifyEmailInput;
     const ctx: VerifyEmailContext = extractRequestMeta(req);
 
     await verifyEmail(input, ctx);
@@ -205,7 +205,7 @@ export const verifyEmailHandler: RequestHandler = async (req, res, next) => {
 
 export const resendVerificationHandler: RequestHandler = async (req, res, next) => {
   try {
-    const input = req.body as ResendVerificationInput;
+    const input = getValidated(req).body as ResendVerificationInput;
     const ctx: ResendVerificationContext = extractRequestMeta(req);
 
     const result = await resendVerification(input, ctx);
@@ -222,7 +222,7 @@ export const createInvitationHandler: RequestHandler = async (req, res, next) =>
       throw new UnauthorizedError('Authentication required');
     }
 
-    const input = req.body as CreateInvitationInput;
+    const input = getValidated(req).body as CreateInvitationInput;
 
     const ctx: CreateInvitationContext = {
       organizationId: req.ctx.organization.id,
@@ -241,12 +241,12 @@ export const createInvitationHandler: RequestHandler = async (req, res, next) =>
 
 export const acceptInvitationHandler: RequestHandler = async (req, res, next) => {
   try {
-    const input = req.body as AcceptInvitationInput;
+    const input = getValidated(req).body as AcceptInvitationInput;
     const ctx: AcceptInvitationContext = extractRequestMeta(req);
 
     await acceptInvitation(input, ctx);
 
-    res.status(200).json({
+    res.status(201).json({
       message: 'Account created successfully. You can now log in.',
     });
   } catch (err) {
@@ -279,7 +279,7 @@ export const revokeSessionHandler: RequestHandler<{ id: string }> = async (req, 
       throw new UnauthorizedError('Authentication required');
     }
 
-    const sessionId = req.params.id;
+    const sessionId = (getValidated(req).params as { id: string }).id;
 
     const ctx: RevokeSessionContext = {
       userId: req.ctx.user.id,
@@ -323,7 +323,7 @@ export const updateProfileHandler: RequestHandler = async (req, res, next) => {
       throw new UnauthorizedError('Authentication required');
     }
 
-    const input = req.body as UpdateProfileInput;
+    const input = getValidated(req).body as UpdateProfileInput;
 
     const ctx: UpdateProfileContext = {
       userId: req.ctx.user.id,
@@ -348,7 +348,7 @@ export const listInvitationsHandler: RequestHandler = async (req, res, next) => 
     const ctx: ListInvitationsContext = {
       organizationId: req.ctx.organization.id,
       actorId: req.ctx.user.id,
-      requestId: extractRequestMeta(req).requestId,
+      ...extractRequestMeta(req),
     };
 
     const result = await listInvitations(ctx);
@@ -369,7 +369,7 @@ export const revokeInvitationHandler: RequestHandler<InvitationIdParam> = async 
       throw new UnauthorizedError('Authentication required');
     }
 
-    const invitationId = req.params.id;
+    const invitationId = (getValidated(req).params as { id: string }).id;
 
     const ctx: RevokeInvitationContext = {
       organizationId: req.ctx.organization.id,

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "agents_org_email_unique" ON "agents" USING btree ("organization_id",lower("email")) WHERE "agents"."email" IS NOT NULL AND "agents"."deleted_at" IS NULL;

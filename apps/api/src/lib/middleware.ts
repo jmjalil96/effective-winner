@@ -30,15 +30,11 @@ const parseOrThrow = (schema: ZodType, data: unknown): unknown => {
 export const validate = (schemas: ValidateOptions): RequestHandler => {
   return (req, _res, next) => {
     try {
-      if (schemas.body) {
-        req.body = parseOrThrow(schemas.body, req.body);
-      }
-      if (schemas.query) {
-        req.query = parseOrThrow(schemas.query, req.query) as typeof req.query;
-      }
-      if (schemas.params) {
-        req.params = parseOrThrow(schemas.params, req.params) as typeof req.params;
-      }
+      req.validated = {
+        body: schemas.body ? parseOrThrow(schemas.body, req.body) : req.body,
+        query: schemas.query ? parseOrThrow(schemas.query, req.query) : req.query,
+        params: schemas.params ? parseOrThrow(schemas.params, req.params) : req.params,
+      };
       next();
     } catch (err) {
       next(err);

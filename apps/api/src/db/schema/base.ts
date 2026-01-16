@@ -9,8 +9,10 @@ import {
   decimal,
   index,
   unique,
+  uniqueIndex,
   jsonb,
   foreignKey,
+  date,
 } from 'drizzle-orm/pg-core';
 import { uuidv7 } from 'uuidv7';
 
@@ -39,7 +41,9 @@ export {
   decimal,
   index,
   unique,
+  uniqueIndex,
   jsonb,
   foreignKey,
+  date,
   uuidv7,
 };

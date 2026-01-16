@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "agents_org_house_agent_unique" ON "agents" USING btree ("organization_id") WHERE "agents"."is_house_agent" = true AND "agents"."deleted_at" IS NULL;

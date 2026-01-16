@@ -1,7 +1,7 @@
 import type { Request, RequestHandler } from 'express';
 import { UnauthorizedError } from '../../errors/index.js';
 import type { CreateRoleInput, UpdateRoleInput, SetRolePermissionsInput } from '@crm/shared';
-import { extractRequestMeta } from '../../lib/utils.js';
+import { extractRequestMeta, getValidated } from '../../lib/utils.js';
 import {
   listPermissions,
   listRoles,
@@ -62,7 +62,7 @@ export const listRolesHandler: RequestHandler = async (req, res, next) => {
 export const getRoleHandler: RequestHandler<{ id: string }> = async (req, res, next) => {
   try {
     const ctx = buildContext(req);
-    const role = await getRole(req.params.id, ctx);
+    const role = await getRole((getValidated(req).params as { id: string }).id, ctx);
 
     res.json({ role });
   } catch (err) {
@@ -73,7 +73,7 @@ export const getRoleHandler: RequestHandler<{ id: string }> = async (req, res, n
 export const createRoleHandler: RequestHandler = async (req, res, next) => {
   try {
     const ctx = buildContext(req);
-    const input = req.body as CreateRoleInput;
+    const input = getValidated(req).body as CreateRoleInput;
     const role = await createRoleService(input, ctx);
 
     res.status(201).json({ role });
@@ -85,8 +85,8 @@ export const createRoleHandler: RequestHandler = async (req, res, next) => {
 export const updateRoleHandler: RequestHandler<{ id: string }> = async (req, res, next) => {
   try {
     const ctx = buildContext(req);
-    const input = req.body as UpdateRoleInput;
-    const role = await updateRoleService(req.params.id, input, ctx);
+    const input = getValidated(req).body as UpdateRoleInput;
+    const role = await updateRoleService((getValidated(req).params as { id: string }).id, input, ctx);
 
     res.json({ role });
   } catch (err) {
@@ -97,7 +97,7 @@ export const updateRoleHandler: RequestHandler<{ id: string }> = async (req, res
 export const deleteRoleHandler: RequestHandler<{ id: string }> = async (req, res, next) => {
   try {
     const ctx = buildContext(req);
-    await deleteRoleService(req.params.id, ctx);
+    await deleteRoleService((getValidated(req).params as { id: string }).id, ctx);
 
     res.status(204).end();
   } catch (err) {
@@ -108,8 +108,8 @@ export const deleteRoleHandler: RequestHandler<{ id: string }> = async (req, res
 export const setRolePermissionsHandler: RequestHandler<{ id: string }> = async (req, res, next) => {
   try {
     const ctx = buildContext(req);
-    const input = req.body as SetRolePermissionsInput;
-    const role = await setRolePermissionsService(req.params.id, input, ctx);
+    const input = getValidated(req).body as SetRolePermissionsInput;
+    const role = await setRolePermissionsService((getValidated(req).params as { id: string }).id, input, ctx);
 
     res.json({ role });
   } catch (err) {

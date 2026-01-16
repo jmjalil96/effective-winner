@@ -7,6 +7,7 @@ import { logger, genReqId } from './config/logger.js';
 import { healthRouter } from './routes/health.js';
 import { authRouter } from './modules/auth/routes.js';
 import { rbacRouter } from './modules/rbac/routes.js';
+import { agentsRouter } from './modules/agents/routes.js';
 import { NotFoundError, errorHandler } from './errors/index.js';
 
 const app: Express = express();
@@ -35,6 +36,7 @@ app.get('/', (_req, res) => {
 app.use('/health', healthRouter);
 app.use('/auth', authRouter);
 app.use('/rbac', rbacRouter);
+app.use('/agents', agentsRouter);
 
 // 404 handler
 app.use((_req, _res, next) => {

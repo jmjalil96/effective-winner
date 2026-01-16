@@ -10,3 +10,14 @@ export const extractRequestMeta = (req: Request) => ({
   requestId:
     typeof req.id === 'string' ? req.id : typeof req.id === 'number' ? String(req.id) : null,
 });
+
+/**
+ * Extracts validated request data set by the validate middleware.
+ * Throws if validation middleware hasn't run (should never happen in properly configured routes).
+ */
+export const getValidated = (req: Request) => {
+  if (!req.validated) {
+    throw new Error('Validation middleware not applied to this route');
+  }
+  return req.validated;
+};

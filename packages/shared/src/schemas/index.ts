@@ -41,3 +41,15 @@ export {
   roleIdParamSchema,
   type RoleIdParam,
 } from './rbac.js';
+
+// Agents
+export {
+  createAgentSchema,
+  type CreateAgentInput,
+  agentIdParamSchema,
+  type AgentIdParam,
+  updateAgentSchema,
+  type UpdateAgentInput,
+  listAgentsQuerySchema,
+  type ListAgentsQuery,
+} from './agents.js';

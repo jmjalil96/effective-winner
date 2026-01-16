@@ -21,6 +21,11 @@ declare global {
           expiresAt: Date;
         };
       };
+      validated?: {
+        body?: unknown;
+        query?: unknown;
+        params?: unknown;
+      };
     }
   }
 }

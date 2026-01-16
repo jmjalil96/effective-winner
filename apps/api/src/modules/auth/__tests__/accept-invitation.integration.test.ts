@@ -291,11 +291,11 @@ describe('POST /auth/accept-invitation', () => {
   });
 
   // ===========================================================================
-  // Success (200)
+  // Success (201)
   // ===========================================================================
 
-  describe('success (200)', () => {
-    it('returns 200 with success message', async () => {
+  describe('success (201)', () => {
+    it('returns 201 with success message', async () => {
       const { user, organization } = await createTestUser();
       const invitableRole = await createInvitableRole(organization.id);
 
@@ -314,7 +314,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'John',
           lastName: 'Doe',
         })
-        .expect(200);
+        .expect(201);
 
       expect(response.body).toHaveProperty('message');
       expect(response.body.message).toContain('successfully');
@@ -339,7 +339,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Jane',
           lastName: 'Smith',
         })
-        .expect(200);
+        .expect(201);
 
       // Verify user was created
       const db = getTestDb();
@@ -371,7 +371,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Jane',
           lastName: 'Smith',
         })
-        .expect(200);
+        .expect(201);
 
       // Should be able to login with the password
       const loginResponse = await supertest(app)
@@ -401,7 +401,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Jane',
           lastName: 'Smith',
         })
-        .expect(200);
+        .expect(201);
 
       // Verify profile was created
       const db = getTestDb();
@@ -437,7 +437,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Org',
           lastName: 'User',
         })
-        .expect(200);
+        .expect(201);
 
       // Verify user belongs to same org
       const db = getTestDb();
@@ -468,7 +468,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Role',
           lastName: 'User',
         })
-        .expect(200);
+        .expect(201);
 
       // Verify user has the invited role
       const db = getTestDb();
@@ -499,7 +499,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Active',
           lastName: 'User',
         })
-        .expect(200);
+        .expect(201);
 
       // Verify user is active
       const db = getTestDb();
@@ -530,7 +530,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Verified',
           lastName: 'User',
         })
-        .expect(200);
+        .expect(201);
 
       // Verify email is marked as verified
       const db = getTestDb();
@@ -561,7 +561,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Accepted',
           lastName: 'User',
         })
-        .expect(200);
+        .expect(201);
 
       // Verify invitation is marked as accepted
       const updatedInvitation = await getInvitationById(invitation.id);
@@ -588,7 +588,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Once',
           lastName: 'Trick',
         })
-        .expect(200);
+        .expect(201);
 
       // Second accept fails
       const response = await supertest(app)
@@ -629,7 +629,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'Shape',
           lastName: 'Test',
         })
-        .expect(200);
+        .expect(201);
 
       expect(response.body).toHaveProperty('message');
       expect(typeof response.body.message).toBe('string');
@@ -654,7 +654,7 @@ describe('POST /auth/accept-invitation', () => {
           firstName: 'No',
           lastName: 'Secrets',
         })
-        .expect(200);
+        .expect(201);
 
       expect(response.body).not.toHaveProperty('user');
       expect(response.body).not.toHaveProperty('token');
