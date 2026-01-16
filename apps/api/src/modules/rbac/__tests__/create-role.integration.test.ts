@@ -7,7 +7,7 @@ import { getTestDb } from '../../../test/setup.js';
 import { createTestUser } from '../../../test/fixtures/user.fixture.js';
 import { cleanupDatabase } from '../../../test/helpers/db.js';
 import { loginAndGetCookie, createDirectSession } from '../../../test/helpers/session.js';
-import { createTestRole, getRoleById, softDeleteRole } from '../../../test/helpers/role.js';
+import { createTestRole, getRoleById } from '../../../test/helpers/role.js';
 import { users } from '../../../db/schema/index.js';
 import { VALID_PASSWORD } from '../../../test/helpers/crypto.js';
 
@@ -213,7 +213,6 @@ describe('POST /rbac/roles', () => {
 
       expect(response.body.role.name).toBe('SharedName');
     });
-
   });
 
   // ===========================================================================
