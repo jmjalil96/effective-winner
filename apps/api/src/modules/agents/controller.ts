@@ -58,7 +58,11 @@ export const updateAgentHandler: RequestHandler<{ id: string }> = async (req, re
   try {
     const ctx = buildContext(req);
     const input = getValidated(req).body as UpdateAgentInput;
-    const agent = await updateAgentService((getValidated(req).params as { id: string }).id, input, ctx);
+    const agent = await updateAgentService(
+      (getValidated(req).params as { id: string }).id,
+      input,
+      ctx
+    );
 
     res.json({ agent });
   } catch (err) {

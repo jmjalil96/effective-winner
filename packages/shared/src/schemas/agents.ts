@@ -10,7 +10,10 @@ export const createAgentSchema = z.object({
   lastName: z.string().min(1).max(255),
   govIdType: z.enum(GOV_ID_TYPES).optional(),
   govIdNumber: z.string().max(20).optional(),
-  email: z.email().transform((e) => e.toLowerCase().trim()).optional(),
+  email: z
+    .email()
+    .transform((e) => e.toLowerCase().trim())
+    .optional(),
   phone: z.string().max(50).optional(),
   dob: z
     .string()
@@ -40,7 +43,11 @@ export const updateAgentSchema = z.object({
   lastName: z.string().min(1).max(255).optional(),
   govIdType: z.enum(GOV_ID_TYPES).nullable().optional(),
   govIdNumber: z.string().max(20).nullable().optional(),
-  email: z.email().transform((e) => e.toLowerCase().trim()).nullable().optional(),
+  email: z
+    .email()
+    .transform((e) => e.toLowerCase().trim())
+    .nullable()
+    .optional(),
   phone: z.string().max(50).nullable().optional(),
   dob: z
     .string()

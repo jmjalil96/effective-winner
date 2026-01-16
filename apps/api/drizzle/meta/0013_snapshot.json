@@ -170,12 +170,8 @@
           "name": "audit_logs_organization_id_organizations_id_fk",
           "tableFrom": "audit_logs",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -183,14 +179,8 @@
           "name": "audit_logs_actor_same_org_fk",
           "tableFrom": "audit_logs",
           "tableTo": "users",
-          "columnsFrom": [
-            "organization_id",
-            "actor_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "actor_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -280,12 +270,8 @@
           "name": "email_verification_tokens_user_id_users_id_fk",
           "tableFrom": "email_verification_tokens",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -414,12 +400,8 @@
           "name": "invitations_organization_id_organizations_id_fk",
           "tableFrom": "invitations",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -427,14 +409,8 @@
           "name": "invitations_role_same_org_fk",
           "tableFrom": "invitations",
           "tableTo": "roles",
-          "columnsFrom": [
-            "organization_id",
-            "role_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "role_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -442,14 +418,8 @@
           "name": "invitations_invited_by_same_org_fk",
           "tableFrom": "invitations",
           "tableTo": "users",
-          "columnsFrom": [
-            "organization_id",
-            "invited_by_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "invited_by_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -539,12 +509,8 @@
           "name": "password_reset_tokens_user_id_users_id_fk",
           "tableFrom": "password_reset_tokens",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -695,12 +661,8 @@
           "name": "sessions_organization_id_organizations_id_fk",
           "tableFrom": "sessions",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -708,14 +670,8 @@
           "name": "sessions_user_same_org_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "organization_id",
-            "user_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "user_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -725,9 +681,7 @@
         "sessions_sid_hash_unique": {
           "name": "sessions_sid_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "sid_hash"
-          ]
+          "columns": ["sid_hash"]
         }
       },
       "policies": {},
@@ -796,9 +750,7 @@
         "organizations_slug_unique": {
           "name": "organizations_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -849,9 +801,7 @@
         "permissions_name_unique": {
           "name": "permissions_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
@@ -919,12 +869,8 @@
           "name": "profiles_user_id_users_id_fk",
           "tableFrom": "profiles",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -934,9 +880,7 @@
         "profiles_user_id_unique": {
           "name": "profiles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -966,12 +910,8 @@
           "name": "role_permissions_role_id_roles_id_fk",
           "tableFrom": "role_permissions",
           "tableTo": "roles",
-          "columnsFrom": [
-            "role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["role_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -979,12 +919,8 @@
           "name": "role_permissions_permission_id_permissions_id_fk",
           "tableFrom": "role_permissions",
           "tableTo": "permissions",
-          "columnsFrom": [
-            "permission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["permission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -992,10 +928,7 @@
       "compositePrimaryKeys": {
         "role_permissions_role_id_permission_id_pk": {
           "name": "role_permissions_role_id_permission_id_pk",
-          "columns": [
-            "role_id",
-            "permission_id"
-          ]
+          "columns": ["role_id", "permission_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1081,12 +1014,8 @@
           "name": "roles_organization_id_organizations_id_fk",
           "tableFrom": "roles",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1096,18 +1025,12 @@
         "roles_org_id_key": {
           "name": "roles_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         },
         "roles_org_name_unique": {
           "name": "roles_org_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "name"
-          ]
+          "columns": ["organization_id", "name"]
         }
       },
       "policies": {},
@@ -1244,12 +1167,8 @@
           "name": "users_organization_id_organizations_id_fk",
           "tableFrom": "users",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1257,14 +1176,8 @@
           "name": "users_role_same_org_fk",
           "tableFrom": "users",
           "tableTo": "roles",
-          "columnsFrom": [
-            "organization_id",
-            "role_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "role_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1274,17 +1187,12 @@
         "users_org_id_key": {
           "name": "users_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -1498,12 +1406,8 @@
           "name": "health_claims_organization_id_organizations_id_fk",
           "tableFrom": "health_claims",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1511,14 +1415,8 @@
           "name": "health_claims_policy_same_org_fk",
           "tableFrom": "health_claims",
           "tableTo": "policies",
-          "columnsFrom": [
-            "organization_id",
-            "policy_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "policy_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1526,14 +1424,8 @@
           "name": "health_claims_related_same_org_fk",
           "tableFrom": "health_claims",
           "tableTo": "health_claims",
-          "columnsFrom": [
-            "organization_id",
-            "related_claim_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "related_claim_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1543,10 +1435,7 @@
         "health_claims_org_id_key": {
           "name": "health_claims_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -1712,12 +1601,8 @@
           "name": "pc_claims_organization_id_organizations_id_fk",
           "tableFrom": "pc_claims",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1725,14 +1610,8 @@
           "name": "pc_claims_policy_same_org_fk",
           "tableFrom": "pc_claims",
           "tableTo": "policies",
-          "columnsFrom": [
-            "organization_id",
-            "policy_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "policy_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1851,12 +1730,8 @@
           "name": "accounts_organization_id_organizations_id_fk",
           "tableFrom": "accounts",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1864,14 +1739,8 @@
           "name": "accounts_agent_same_org_fk",
           "tableFrom": "accounts",
           "tableTo": "agents",
-          "columnsFrom": [
-            "organization_id",
-            "agent_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "agent_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1881,10 +1750,7 @@
         "accounts_org_id_key": {
           "name": "accounts_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -2064,12 +1930,8 @@
           "name": "agents_organization_id_organizations_id_fk",
           "tableFrom": "agents",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2079,18 +1941,12 @@
         "agents_org_id_key": {
           "name": "agents_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         },
         "agents_org_agent_id_unique": {
           "name": "agents_org_agent_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "agent_id"
-          ]
+          "columns": ["organization_id", "agent_id"]
         }
       },
       "policies": {},
@@ -2201,12 +2057,8 @@
           "name": "client_contacts_organization_id_organizations_id_fk",
           "tableFrom": "client_contacts",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2214,14 +2066,8 @@
           "name": "client_contacts_client_same_org_fk",
           "tableFrom": "client_contacts",
           "tableTo": "clients",
-          "columnsFrom": [
-            "organization_id",
-            "client_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "client_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2415,12 +2261,8 @@
           "name": "clients_organization_id_organizations_id_fk",
           "tableFrom": "clients",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2428,14 +2270,8 @@
           "name": "clients_account_same_org_fk",
           "tableFrom": "clients",
           "tableTo": "accounts",
-          "columnsFrom": [
-            "organization_id",
-            "account_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "account_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2445,10 +2281,7 @@
         "clients_org_id_key": {
           "name": "clients_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -2485,12 +2318,8 @@
           "name": "id_counters_organization_id_organizations_id_fk",
           "tableFrom": "id_counters",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2498,10 +2327,7 @@
       "compositePrimaryKeys": {
         "id_counters_organization_id_entity_type_pk": {
           "name": "id_counters_organization_id_entity_type_pk",
-          "columns": [
-            "organization_id",
-            "entity_type"
-          ]
+          "columns": ["organization_id", "entity_type"]
         }
       },
       "uniqueConstraints": {},
@@ -2703,12 +2529,8 @@
           "name": "agent_commissions_organization_id_organizations_id_fk",
           "tableFrom": "agent_commissions",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2716,14 +2538,8 @@
           "name": "agent_commissions_statement_same_org_fk",
           "tableFrom": "agent_commissions",
           "tableTo": "commission_statements",
-          "columnsFrom": [
-            "organization_id",
-            "commission_statement_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "commission_statement_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2731,14 +2547,8 @@
           "name": "agent_commissions_policy_same_org_fk",
           "tableFrom": "agent_commissions",
           "tableTo": "policies",
-          "columnsFrom": [
-            "organization_id",
-            "policy_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "policy_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2746,14 +2556,8 @@
           "name": "agent_commissions_agent_same_org_fk",
           "tableFrom": "agent_commissions",
           "tableTo": "agents",
-          "columnsFrom": [
-            "organization_id",
-            "agent_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "agent_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2761,14 +2565,8 @@
           "name": "agent_commissions_agent_statement_same_org_fk",
           "tableFrom": "agent_commissions",
           "tableTo": "agent_statements",
-          "columnsFrom": [
-            "organization_id",
-            "agent_statement_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "agent_statement_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2949,12 +2747,8 @@
           "name": "agent_statements_organization_id_organizations_id_fk",
           "tableFrom": "agent_statements",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2962,14 +2756,8 @@
           "name": "agent_statements_agent_same_org_fk",
           "tableFrom": "agent_statements",
           "tableTo": "agents",
-          "columnsFrom": [
-            "organization_id",
-            "agent_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "agent_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2979,10 +2767,7 @@
         "agent_statements_org_id_key": {
           "name": "agent_statements_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -3103,12 +2888,8 @@
           "name": "commission_rate_splits_organization_id_organizations_id_fk",
           "tableFrom": "commission_rate_splits",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3116,14 +2897,8 @@
           "name": "commission_rate_splits_rate_same_org_fk",
           "tableFrom": "commission_rate_splits",
           "tableTo": "commission_rates",
-          "columnsFrom": [
-            "organization_id",
-            "commission_rate_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "commission_rate_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3131,14 +2906,8 @@
           "name": "commission_rate_splits_agent_same_org_fk",
           "tableFrom": "commission_rate_splits",
           "tableTo": "agents",
-          "columnsFrom": [
-            "organization_id",
-            "beneficiary_agent_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "beneficiary_agent_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3148,10 +2917,7 @@
         "commission_rate_splits_unique": {
           "name": "commission_rate_splits_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "commission_rate_id",
-            "beneficiary_agent_id"
-          ]
+          "columns": ["commission_rate_id", "beneficiary_agent_id"]
         }
       },
       "policies": {},
@@ -3307,12 +3073,8 @@
           "name": "commission_rates_organization_id_organizations_id_fk",
           "tableFrom": "commission_rates",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3320,14 +3082,8 @@
           "name": "commission_rates_agent_same_org_fk",
           "tableFrom": "commission_rates",
           "tableTo": "agents",
-          "columnsFrom": [
-            "organization_id",
-            "primary_agent_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "primary_agent_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3335,14 +3091,8 @@
           "name": "commission_rates_product_same_org_fk",
           "tableFrom": "commission_rates",
           "tableTo": "products",
-          "columnsFrom": [
-            "organization_id",
-            "product_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "product_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3352,10 +3102,7 @@
         "commission_rates_org_id_key": {
           "name": "commission_rates_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         },
         "commission_rates_unique": {
           "name": "commission_rates_unique",
@@ -3586,12 +3333,8 @@
           "name": "commission_statements_organization_id_organizations_id_fk",
           "tableFrom": "commission_statements",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3599,14 +3342,8 @@
           "name": "commission_statements_insurer_same_org_fk",
           "tableFrom": "commission_statements",
           "tableTo": "insurers",
-          "columnsFrom": [
-            "organization_id",
-            "insurer_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "insurer_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3614,14 +3351,8 @@
           "name": "commission_statements_related_same_org_fk",
           "tableFrom": "commission_statements",
           "tableTo": "commission_statements",
-          "columnsFrom": [
-            "organization_id",
-            "related_statement_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "related_statement_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3631,10 +3362,7 @@
         "commission_statements_org_id_key": {
           "name": "commission_statements_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -3697,9 +3425,7 @@
         "insurance_types_type_id_unique": {
           "name": "insurance_types_type_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "type_id"
-          ]
+          "columns": ["type_id"]
         }
       },
       "policies": {},
@@ -3810,12 +3536,8 @@
           "name": "insurer_contacts_organization_id_organizations_id_fk",
           "tableFrom": "insurer_contacts",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3823,14 +3545,8 @@
           "name": "insurer_contacts_insurer_same_org_fk",
           "tableFrom": "insurer_contacts",
           "tableTo": "insurers",
-          "columnsFrom": [
-            "organization_id",
-            "insurer_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "insurer_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3952,12 +3668,8 @@
           "name": "insurers_organization_id_organizations_id_fk",
           "tableFrom": "insurers",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3967,10 +3679,7 @@
         "insurers_org_id_key": {
           "name": "insurers_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -4118,12 +3827,8 @@
           "name": "products_organization_id_organizations_id_fk",
           "tableFrom": "products",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4131,12 +3836,8 @@
           "name": "products_insurance_type_id_insurance_types_id_fk",
           "tableFrom": "products",
           "tableTo": "insurance_types",
-          "columnsFrom": [
-            "insurance_type_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["insurance_type_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4144,14 +3845,8 @@
           "name": "products_insurer_same_org_fk",
           "tableFrom": "products",
           "tableTo": "insurers",
-          "columnsFrom": [
-            "organization_id",
-            "insurer_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "insurer_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -4161,10 +3856,7 @@
         "products_org_id_key": {
           "name": "products_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -4318,12 +4010,8 @@
           "name": "payments_organization_id_organizations_id_fk",
           "tableFrom": "payments",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4331,14 +4019,8 @@
           "name": "payments_policy_movement_same_org_fk",
           "tableFrom": "payments",
           "tableTo": "policy_movements",
-          "columnsFrom": [
-            "organization_id",
-            "policy_movement_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "policy_movement_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -4621,12 +4303,8 @@
           "name": "policies_organization_id_organizations_id_fk",
           "tableFrom": "policies",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4634,12 +4312,8 @@
           "name": "policies_insurance_type_id_insurance_types_id_fk",
           "tableFrom": "policies",
           "tableTo": "insurance_types",
-          "columnsFrom": [
-            "insurance_type_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["insurance_type_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4647,14 +4321,8 @@
           "name": "policies_client_same_org_fk",
           "tableFrom": "policies",
           "tableTo": "clients",
-          "columnsFrom": [
-            "organization_id",
-            "client_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "client_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4662,14 +4330,8 @@
           "name": "policies_agent_same_org_fk",
           "tableFrom": "policies",
           "tableTo": "agents",
-          "columnsFrom": [
-            "organization_id",
-            "agent_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "agent_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4677,14 +4339,8 @@
           "name": "policies_product_same_org_fk",
           "tableFrom": "policies",
           "tableTo": "products",
-          "columnsFrom": [
-            "organization_id",
-            "product_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "product_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4692,14 +4348,8 @@
           "name": "policies_renewed_from_same_org_fk",
           "tableFrom": "policies",
           "tableTo": "policies",
-          "columnsFrom": [
-            "organization_id",
-            "renewed_from_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "renewed_from_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -4709,10 +4359,7 @@
         "policies_org_id_key": {
           "name": "policies_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -4911,12 +4558,8 @@
           "name": "policy_movements_organization_id_organizations_id_fk",
           "tableFrom": "policy_movements",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -4924,14 +4567,8 @@
           "name": "policy_movements_policy_same_org_fk",
           "tableFrom": "policy_movements",
           "tableTo": "policies",
-          "columnsFrom": [
-            "organization_id",
-            "policy_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "policy_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -4941,10 +4578,7 @@
         "policy_movements_org_id_key": {
           "name": "policy_movements_org_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id",
-            "id"
-          ]
+          "columns": ["organization_id", "id"]
         }
       },
       "policies": {},
@@ -5104,12 +4738,8 @@
           "name": "notes_organization_id_organizations_id_fk",
           "tableFrom": "notes",
           "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -5117,14 +4747,8 @@
           "name": "notes_created_by_same_org_fk",
           "tableFrom": "notes",
           "tableTo": "users",
-          "columnsFrom": [
-            "organization_id",
-            "created_by_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "created_by_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -5132,14 +4756,8 @@
           "name": "notes_edited_by_same_org_fk",
           "tableFrom": "notes",
           "tableTo": "users",
-          "columnsFrom": [
-            "organization_id",
-            "edited_by_id"
-          ],
-          "columnsTo": [
-            "organization_id",
-            "id"
-          ],
+          "columnsFrom": ["organization_id", "edited_by_id"],
+          "columnsTo": ["organization_id", "id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

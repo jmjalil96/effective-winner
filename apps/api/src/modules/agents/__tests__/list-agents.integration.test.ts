@@ -152,8 +152,16 @@ describe('GET /agents', () => {
       });
       const cookie = await loginAndGetCookie(user.email, VALID_PASSWORD);
 
-      await createTestAgent({ organizationId: organization.id, firstName: 'Carlos', lastName: 'Ruiz' });
-      await createTestAgent({ organizationId: organization.id, firstName: 'Maria', lastName: 'Lopez' });
+      await createTestAgent({
+        organizationId: organization.id,
+        firstName: 'Carlos',
+        lastName: 'Ruiz',
+      });
+      await createTestAgent({
+        organizationId: organization.id,
+        firstName: 'Maria',
+        lastName: 'Lopez',
+      });
 
       const response = await supertest(app)
         .get('/agents?search=carl')
@@ -170,8 +178,16 @@ describe('GET /agents', () => {
       });
       const cookie = await loginAndGetCookie(user.email, VALID_PASSWORD);
 
-      await createTestAgent({ organizationId: organization.id, firstName: 'Carlos', lastName: 'Fernandez' });
-      await createTestAgent({ organizationId: organization.id, firstName: 'Maria', lastName: 'Lopez' });
+      await createTestAgent({
+        organizationId: organization.id,
+        firstName: 'Carlos',
+        lastName: 'Fernandez',
+      });
+      await createTestAgent({
+        organizationId: organization.id,
+        firstName: 'Maria',
+        lastName: 'Lopez',
+      });
 
       const response = await supertest(app)
         .get('/agents?search=FERN')

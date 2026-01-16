@@ -1,6 +1,6 @@
 {
-  "id": "a15ced97-9da4-42b2-94c4-479b68f824bd",
-  "prevId": "0bbeef8c-20d2-4ee3-9e74-d94620d63fe7",
+  "id": "ad4f97d2-aabb-4ff9-88ab-d37b8c4054c7",
+  "prevId": "82626ba4-de69-4b5f-8289-e18aac383a59",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1026,6 +1026,11 @@
           "name": "roles_org_id_key",
           "nullsNotDistinct": false,
           "columns": ["organization_id", "id"]
+        },
+        "roles_org_name_unique": {
+          "name": "roles_org_name_unique",
+          "nullsNotDistinct": false,
+          "columns": ["organization_id", "name"]
         }
       },
       "policies": {},
@@ -1653,6 +1658,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "account_id": {
+          "name": "account_id",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "agent_id": {
           "name": "agent_id",
           "type": "uuid",
@@ -1746,6 +1757,11 @@
           "name": "accounts_org_id_key",
           "nullsNotDistinct": false,
           "columns": ["organization_id", "id"]
+        },
+        "accounts_org_account_id_unique": {
+          "name": "accounts_org_account_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["organization_id", "account_id"]
         }
       },
       "policies": {},
@@ -1832,7 +1848,7 @@
         },
         "dob": {
           "name": "dob",
-          "type": "timestamp with time zone",
+          "type": "date",
           "primaryKey": false,
           "notNull": false
         },
@@ -1893,6 +1909,44 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "agents_org_email_unique": {
+          "name": "agents_org_email_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "lower(\"email\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"agents\".\"email\" IS NOT NULL AND \"agents\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "agents_org_house_agent_unique": {
+          "name": "agents_org_house_agent_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"agents\".\"is_house_agent\" = true AND \"agents\".\"deleted_at\" IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -2149,7 +2203,7 @@
         },
         "dob": {
           "name": "dob",
-          "type": "timestamp with time zone",
+          "type": "date",
           "primaryKey": false,
           "notNull": false
         },
@@ -2257,6 +2311,53 @@
           "columns": ["organization_id", "id"]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.id_counters": {
+      "name": "id_counters",
+      "schema": "",
+      "columns": {
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_value": {
+          "name": "last_value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "id_counters_organization_id_organizations_id_fk": {
+          "name": "id_counters_organization_id_organizations_id_fk",
+          "tableFrom": "id_counters",
+          "tableTo": "organizations",
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "id_counters_organization_id_entity_type_pk": {
+          "name": "id_counters_organization_id_entity_type_pk",
+          "columns": ["organization_id", "entity_type"]
+        }
+      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

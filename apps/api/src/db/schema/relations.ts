@@ -1,22 +1,10 @@
 import { relations } from 'drizzle-orm';
 
 // Core tables
-import {
-  organizations,
-  users,
-  profiles,
-  roles,
-  permissions,
-  rolePermissions,
-} from './core.js';
+import { organizations, users, profiles, roles, permissions, rolePermissions } from './core.js';
 
 // Auth tables
-import {
-  sessions,
-  passwordResetTokens,
-  emailVerificationTokens,
-  invitations,
-} from './auth.js';
+import { sessions, passwordResetTokens, emailVerificationTokens, invitations } from './auth.js';
 
 // Audit tables
 import { auditLogs } from './audit.js';

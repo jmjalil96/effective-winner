@@ -92,10 +92,7 @@ export const createAgentService = async (
     },
   });
 
-  serviceLogger.info(
-    { agentId: agent.agentId, requestId: ctx.requestId },
-    'Agent created'
-  );
+  serviceLogger.info({ agentId: agent.agentId, requestId: ctx.requestId }, 'Agent created');
 
   return mapAgent(agent);
 };
@@ -104,10 +101,7 @@ export const createAgentService = async (
 // Get Agent
 // =============================================================================
 
-export const getAgentService = async (
-  agentId: string,
-  ctx: AgentContext
-): Promise<Agent> => {
+export const getAgentService = async (agentId: string, ctx: AgentContext): Promise<Agent> => {
   const agent = await findAgentById(agentId, ctx.organizationId);
 
   if (!agent) {
@@ -230,10 +224,7 @@ export const listAgentsService = async (
 // Delete Agent
 // =============================================================================
 
-export const deleteAgentService = async (
-  agentId: string,
-  ctx: AgentContext
-): Promise<void> => {
+export const deleteAgentService = async (agentId: string, ctx: AgentContext): Promise<void> => {
   const auditCtx = toAuditContext(ctx);
 
   // 1. Find agent
@@ -263,8 +254,5 @@ export const deleteAgentService = async (
     },
   });
 
-  serviceLogger.info(
-    { agentId: agent.agentId, requestId: ctx.requestId },
-    'Agent deleted'
-  );
+  serviceLogger.info({ agentId: agent.agentId, requestId: ctx.requestId }, 'Agent deleted');
 };

@@ -77,6 +77,7 @@ export const accounts = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
+    accountId: varchar('account_id', { length: 20 }).notNull(),
     agentId: uuid('agent_id').notNull(),
     name: varchar('name', { length: 255 }).notNull(),
     status: varchar('status', { length: 20 }).notNull().default('active'),
@@ -87,6 +88,8 @@ export const accounts = pgTable(
     index('accounts_status_idx').on(table.status),
     // Composite unique for tenant-isolated FK references
     unique('accounts_org_id_key').on(table.organizationId, table.id),
+    // Unique accountId per organization
+    unique('accounts_org_account_id_unique').on(table.organizationId, table.accountId),
     // Composite FK: agent must be from same organization
     foreignKey({
       columns: [table.organizationId, table.agentId],

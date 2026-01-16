@@ -260,7 +260,10 @@ describe('POST /agents', () => {
       const db = getTestDb();
       const createdAgentId = String(response.body.agent.id);
       const log = await pollUntil(async () => {
-        const [row] = await db.select().from(auditLogs).where(eq(auditLogs.entityId, createdAgentId));
+        const [row] = await db
+          .select()
+          .from(auditLogs)
+          .where(eq(auditLogs.entityId, createdAgentId));
         return row;
       });
       expect(log.action).toBe(AUDIT_ACTIONS.AGENT_CREATE);

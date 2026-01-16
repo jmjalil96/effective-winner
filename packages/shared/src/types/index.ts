@@ -34,3 +34,12 @@ export type {
   PaginationMeta,
   ListAgentsResponse,
 } from './agents.js';
+
+// Accounts
+export type {
+  Account,
+  CreateAccountResponse,
+  GetAccountResponse,
+  UpdateAccountResponse,
+  ListAccountsResponse,
+} from './accounts.js';

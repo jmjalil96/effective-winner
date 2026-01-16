@@ -53,6 +53,11 @@ export const AUDIT_ACTIONS = {
   AGENT_CREATE: 'agent:create',
   AGENT_UPDATE: 'agent:update',
   AGENT_DELETE: 'agent:delete',
+
+  // Account
+  ACCOUNT_CREATE: 'account:create',
+  ACCOUNT_UPDATE: 'account:update',
+  ACCOUNT_DELETE: 'account:delete',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

@@ -53,3 +53,15 @@ export {
   listAgentsQuerySchema,
   type ListAgentsQuery,
 } from './agents.js';
+
+// Accounts
+export {
+  createAccountSchema,
+  type CreateAccountInput,
+  accountIdParamSchema,
+  type AccountIdParam,
+  updateAccountSchema,
+  type UpdateAccountInput,
+  listAccountsQuerySchema,
+  type ListAccountsQuery,
+} from './accounts.js';

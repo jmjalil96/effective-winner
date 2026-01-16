@@ -396,10 +396,7 @@ export const hasAgentRelatedData = async (
   return result[0]?.['has_data'] === true;
 };
 
-export const softDeleteAgent = async (
-  agentId: string,
-  organizationId: string
-): Promise<void> => {
+export const softDeleteAgent = async (agentId: string, organizationId: string): Promise<void> => {
   await db
     .update(agents)
     .set({ deletedAt: new Date() })

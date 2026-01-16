@@ -1,19 +1,8 @@
 // Core types
-import {
-  organizations,
-  users,
-  profiles,
-  roles,
-  permissions,
-} from './core.js';
+import { organizations, users, profiles, roles, permissions } from './core.js';
 
 // Auth types
-import {
-  sessions,
-  passwordResetTokens,
-  emailVerificationTokens,
-  invitations,
-} from './auth.js';
+import { sessions, passwordResetTokens, emailVerificationTokens, invitations } from './auth.js';
 
 // Audit types
 import { auditLogs } from './audit.js';

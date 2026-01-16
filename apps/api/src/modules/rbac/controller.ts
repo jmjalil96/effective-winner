@@ -86,7 +86,11 @@ export const updateRoleHandler: RequestHandler<{ id: string }> = async (req, res
   try {
     const ctx = buildContext(req);
     const input = getValidated(req).body as UpdateRoleInput;
-    const role = await updateRoleService((getValidated(req).params as { id: string }).id, input, ctx);
+    const role = await updateRoleService(
+      (getValidated(req).params as { id: string }).id,
+      input,
+      ctx
+    );
 
     res.json({ role });
   } catch (err) {
@@ -109,7 +113,11 @@ export const setRolePermissionsHandler: RequestHandler<{ id: string }> = async (
   try {
     const ctx = buildContext(req);
     const input = getValidated(req).body as SetRolePermissionsInput;
-    const role = await setRolePermissionsService((getValidated(req).params as { id: string }).id, input, ctx);
+    const role = await setRolePermissionsService(
+      (getValidated(req).params as { id: string }).id,
+      input,
+      ctx
+    );
 
     res.json({ role });
   } catch (err) {

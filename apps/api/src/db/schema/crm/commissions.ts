@@ -33,7 +33,9 @@ export const commissionStatements = pgTable(
     relatedStatementId: uuid('related_statement_id'),
     value: decimal('value', { precision: 12, scale: 2 }).notNull(),
     taxRate: decimal('tax_rate', { precision: 5, scale: 4 }),
-    reconciliationStatus: varchar('reconciliation_status', { length: 20 }).notNull().default('pending'),
+    reconciliationStatus: varchar('reconciliation_status', { length: 20 })
+      .notNull()
+      .default('pending'),
     invoiceNumber: varchar('invoice_number', { length: 100 }),
     invoiceDate: timestamp('invoice_date', { withTimezone: true }),
     invoiceStatus: varchar('invoice_status', { length: 20 }),
