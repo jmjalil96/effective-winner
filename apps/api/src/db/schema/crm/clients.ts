@@ -107,9 +107,11 @@ export const clients = pgTable(
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.id),
+    clientId: varchar('client_id', { length: 20 }).notNull(),
     accountId: uuid('account_id').notNull(),
     clientType: varchar('client_type', { length: 20 }).notNull(),
     name: varchar('name', { length: 255 }).notNull(),
+    companyName: varchar('company_name', { length: 255 }),
     firstName: varchar('first_name', { length: 255 }),
     lastName: varchar('last_name', { length: 255 }),
     govIdType: varchar('gov_id_type', { length: 20 }),
@@ -128,12 +130,22 @@ export const clients = pgTable(
     index('clients_status_idx').on(table.status),
     // Composite unique for tenant-isolated FK references
     unique('clients_org_id_key').on(table.organizationId, table.id),
+    // Unique clientId per organization
+    unique('clients_org_client_id_unique').on(table.organizationId, table.clientId),
     // Composite FK: account must be from same organization
     foreignKey({
       columns: [table.organizationId, table.accountId],
       foreignColumns: [accounts.organizationId, accounts.id],
       name: 'clients_account_same_org_fk',
     }),
+    // Case-insensitive email uniqueness per org (partial index for non-null, non-deleted)
+    uniqueIndex('clients_org_email_unique')
+      .on(table.organizationId, sql`lower(${table.email})`)
+      .where(sql`${table.email} IS NOT NULL AND ${table.deletedAt} IS NULL`),
+    // GovIdNumber uniqueness per org (partial index for non-null, non-deleted)
+    uniqueIndex('clients_org_gov_id_unique')
+      .on(table.organizationId, table.govIdNumber)
+      .where(sql`${table.govIdNumber} IS NOT NULL AND ${table.deletedAt} IS NULL`),
   ]
 );
 

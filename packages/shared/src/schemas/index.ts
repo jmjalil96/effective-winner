@@ -65,3 +65,15 @@ export {
   listAccountsQuerySchema,
   type ListAccountsQuery,
 } from './accounts.js';
+
+// Clients
+export {
+  createClientSchema,
+  type CreateClientInput,
+  clientIdParamSchema,
+  type ClientIdParam,
+  updateClientSchema,
+  type UpdateClientInput,
+  listClientsQuerySchema,
+  type ListClientsQuery,
+} from './clients.js';

@@ -1,13 +1,22 @@
 import type { AccountStatus } from '../constants/accounts.js';
 
 // =============================================================================
+// Related Entity Summaries
+// =============================================================================
+
+export interface AgentSummary {
+  id: string;
+  name: string;
+}
+
+// =============================================================================
 // Account
 // =============================================================================
 
 export interface Account {
   id: string;
   accountId: string;
-  agentId: string;
+  agent: AgentSummary;
   name: string;
   status: AccountStatus;
   createdAt: string;

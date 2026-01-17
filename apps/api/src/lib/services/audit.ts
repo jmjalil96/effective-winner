@@ -58,6 +58,11 @@ export const AUDIT_ACTIONS = {
   ACCOUNT_CREATE: 'account:create',
   ACCOUNT_UPDATE: 'account:update',
   ACCOUNT_DELETE: 'account:delete',
+
+  // Client
+  CLIENT_CREATE: 'client:create',
+  CLIENT_UPDATE: 'client:update',
+  CLIENT_DELETE: 'client:delete',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

@@ -112,8 +112,19 @@ export const createTestAccount = async (
 export interface CreateTestClientOptions {
   organizationId: string;
   accountId: string;
+  clientId?: string;
+  clientType?: 'individual' | 'business';
   name?: string;
-  clientType?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  companyName?: string | null;
+  govIdType?: string | null;
+  govIdNumber?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  sex?: string | null;
+  dob?: string | null;
+  businessDescription?: string | null;
   status?: string;
   deleted?: boolean;
 }
@@ -127,6 +138,19 @@ export const createTestClient = async (
 ): Promise<CreateTestClientResult> => {
   const db = getTestDb();
   const uniqueId = `${String(Date.now())}-${Math.random().toString(36).slice(2, 8)}`;
+  const shortId = Math.random().toString(36).slice(2, 6).toUpperCase();
+
+  const clientType = options.clientType ?? 'individual';
+  const firstName = options.firstName ?? (clientType === 'individual' ? 'Test' : null);
+  const lastName = options.lastName ?? (clientType === 'individual' ? 'Client' : null);
+  const companyName = options.companyName ?? (clientType === 'business' ? `Company-${uniqueId}` : null);
+
+  // Compute name if not provided
+  const name =
+    options.name ??
+    (clientType === 'individual'
+      ? `${firstName ?? 'Test'} ${lastName ?? 'Client'}`
+      : companyName ?? `Client-${uniqueId}`);
 
   const [client] = await db
     .insert(clients)
@@ -134,8 +158,19 @@ export const createTestClient = async (
       id: uuidv7(),
       organizationId: options.organizationId,
       accountId: options.accountId,
-      name: options.name ?? `Client-${uniqueId}`,
-      clientType: options.clientType ?? 'individual',
+      clientId: options.clientId ?? `CLT-${shortId}`,
+      clientType,
+      name,
+      firstName,
+      lastName,
+      companyName,
+      govIdType: options.govIdType ?? null,
+      govIdNumber: options.govIdNumber ?? null,
+      phone: options.phone ?? null,
+      email: options.email ?? null,
+      sex: options.sex ?? null,
+      dob: options.dob ?? null,
+      businessDescription: options.businessDescription ?? null,
       status: options.status ?? 'active',
       deletedAt: options.deleted ? new Date() : null,
     })

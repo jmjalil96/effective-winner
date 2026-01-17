@@ -277,7 +277,7 @@ describe('POST /accounts', () => {
 
       expect(response.body).toHaveProperty('account');
       expect(response.body.account.accountId).toBe('ACC-0001');
-      expect(response.body.account.agentId).toBe(agent.id);
+      expect(response.body.account.agent.id).toBe(agent.id);
       expect(response.body.account.name).toBe('Test Account');
       expect(response.body.account.status).toBe('active');
     });
@@ -302,7 +302,7 @@ describe('POST /accounts', () => {
 
       expect(response.body.account).toMatchObject({
         accountId: 'ACC-0001',
-        agentId: agent.id,
+        agent: { id: agent.id },
         name: 'Premium Account',
         status: 'inactive',
       });

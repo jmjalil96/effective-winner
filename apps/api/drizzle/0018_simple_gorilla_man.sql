@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "clients_org_email_unique" ON "clients" USING btree ("organization_id",lower("email")) WHERE "clients"."email" IS NOT NULL AND "clients"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "clients_org_gov_id_unique" ON "clients" USING btree ("organization_id","gov_id_number") WHERE "clients"."gov_id_number" IS NOT NULL AND "clients"."deleted_at" IS NULL;

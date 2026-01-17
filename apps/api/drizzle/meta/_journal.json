@@ -113,6 +113,27 @@
       "when": 1768601342148,
       "tag": "0015_ambitious_goliath",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1768607436358,
+      "tag": "0016_low_rhino",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1768608297208,
+      "tag": "0017_milky_maverick",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1768608884333,
+      "tag": "0018_simple_gorilla_man",
+      "breakpoints": true
     }
   ]
 }

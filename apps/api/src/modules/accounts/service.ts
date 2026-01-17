@@ -56,7 +56,7 @@ export const createAccountService = async (
   const accountId = await getNextAccountId(ctx.organizationId);
 
   // 3. Create account
-  const account = await createAccount({
+  const created = await createAccount({
     organizationId: ctx.organizationId,
     accountId,
     agentId: input.agentId,
@@ -68,15 +68,21 @@ export const createAccountService = async (
   logWithContext(auditCtx, {
     action: AUDIT_ACTIONS.ACCOUNT_CREATE,
     entityType: 'account',
-    entityId: account.id,
+    entityId: created.id,
     metadata: {
-      accountId: account.accountId,
-      name: account.name,
-      agentId: account.agentId,
+      accountId: created.accountId,
+      name: created.name,
+      agentId: created.agentId,
     },
   });
 
-  serviceLogger.info({ accountId: account.accountId, requestId: ctx.requestId }, 'Account created');
+  serviceLogger.info({ accountId: created.accountId, requestId: ctx.requestId }, 'Account created');
+
+  // 5. Re-fetch to get full data with agent info
+  const account = await findAccountById(created.id, ctx.organizationId);
+  if (!account) {
+    throw new NotFoundError(ACCOUNT_ERRORS.ACCOUNT_NOT_FOUND);
+  }
 
   return mapAccount(account);
 };
@@ -132,7 +138,7 @@ export const updateAccountService = async (
   }
 
   // 4. Update
-  const account = await updateAccount(accountId, ctx.organizationId, input);
+  const updated = await updateAccount(accountId, ctx.organizationId, input);
 
   // 5. Audit log with before/after
   logWithContext(auditCtx, {
@@ -146,14 +152,20 @@ export const updateAccountService = async (
         status: existing.status,
       },
       after: {
-        agentId: account.agentId,
-        name: account.name,
-        status: account.status,
+        agentId: updated.agentId,
+        name: updated.name,
+        status: updated.status,
       },
     },
   });
 
-  serviceLogger.info({ accountId: account.accountId, requestId: ctx.requestId }, 'Account updated');
+  serviceLogger.info({ accountId: updated.accountId, requestId: ctx.requestId }, 'Account updated');
+
+  // 6. Re-fetch to get full data with agent info
+  const account = await findAccountById(accountId, ctx.organizationId);
+  if (!account) {
+    throw new NotFoundError(ACCOUNT_ERRORS.ACCOUNT_NOT_FOUND);
+  }
 
   return mapAccount(account);
 };

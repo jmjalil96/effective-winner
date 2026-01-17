@@ -37,9 +37,20 @@ export type {
 
 // Accounts
 export type {
+  AgentSummary,
   Account,
   CreateAccountResponse,
   GetAccountResponse,
   UpdateAccountResponse,
   ListAccountsResponse,
 } from './accounts.js';
+
+// Clients
+export type {
+  AccountSummary,
+  Client,
+  CreateClientResponse,
+  GetClientResponse,
+  UpdateClientResponse,
+  ListClientsResponse,
+} from './clients.js';

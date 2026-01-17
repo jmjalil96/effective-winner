@@ -9,6 +9,7 @@ import { authRouter } from './modules/auth/routes.js';
 import { rbacRouter } from './modules/rbac/routes.js';
 import { agentsRouter } from './modules/agents/routes.js';
 import { accountsRouter } from './modules/accounts/routes.js';
+import { clientsRouter } from './modules/clients/routes.js';
 import { NotFoundError, errorHandler } from './errors/index.js';
 
 const app: Express = express();
@@ -39,6 +40,7 @@ app.use('/auth', authRouter);
 app.use('/rbac', rbacRouter);
 app.use('/agents', agentsRouter);
 app.use('/accounts', accountsRouter);
+app.use('/clients', clientsRouter);
 
 // 404 handler
 app.use((_req, _res, next) => {

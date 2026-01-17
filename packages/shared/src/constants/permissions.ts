@@ -13,6 +13,10 @@ export const PERMISSIONS = [
   { name: 'accounts:create', description: 'Create accounts' },
   { name: 'accounts:update', description: 'Update accounts' },
   { name: 'accounts:delete', description: 'Delete accounts' },
+  { name: 'clients:read', description: 'View clients' },
+  { name: 'clients:create', description: 'Create clients' },
+  { name: 'clients:update', description: 'Update clients' },
+  { name: 'clients:delete', description: 'Delete clients' },
 ] as const;
 
 export type PermissionName = (typeof PERMISSIONS)[number]['name'];

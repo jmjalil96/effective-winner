@@ -12,6 +12,7 @@
     "db:generate": "tsx node_modules/drizzle-kit/bin.cjs generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:studio": "tsx node_modules/drizzle-kit/bin.cjs studio",
+    "db:seed": "tsx src/scripts/seed.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"

@@ -12,6 +12,8 @@ export interface AccountRow {
   organizationId: string;
   accountId: string;
   agentId: string;
+  agentFirstName: string | null;
+  agentLastName: string | null;
   name: string;
   status: string;
   createdAt: Date;
@@ -83,12 +85,15 @@ export const findAccountById = async (
       organizationId: accounts.organizationId,
       accountId: accounts.accountId,
       agentId: accounts.agentId,
+      agentFirstName: agents.firstName,
+      agentLastName: agents.lastName,
       name: accounts.name,
       status: accounts.status,
       createdAt: accounts.createdAt,
       updatedAt: accounts.updatedAt,
     })
     .from(accounts)
+    .leftJoin(agents, eq(accounts.agentId, agents.id))
     .where(
       and(
         eq(accounts.id, accountId),
@@ -113,7 +118,18 @@ export interface CreateAccountParams {
   status?: string;
 }
 
-export const createAccount = async (params: CreateAccountParams): Promise<AccountRow> => {
+export interface CreateAccountResult {
+  id: string;
+  organizationId: string;
+  accountId: string;
+  agentId: string;
+  name: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export const createAccount = async (params: CreateAccountParams): Promise<CreateAccountResult> => {
   const result = await db
     .insert(accounts)
     .values({
@@ -145,11 +161,22 @@ export interface UpdateAccountParams {
   status?: string;
 }
 
+export interface UpdateAccountResult {
+  id: string;
+  organizationId: string;
+  accountId: string;
+  agentId: string;
+  name: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export const updateAccount = async (
   accountId: string,
   organizationId: string,
   params: UpdateAccountParams
-): Promise<AccountRow> => {
+): Promise<UpdateAccountResult> => {
   const result = await db
     .update(accounts)
     .set({
@@ -255,12 +282,15 @@ export const listAccounts = async (params: ListAccountsParams): Promise<ListAcco
       organizationId: accounts.organizationId,
       accountId: accounts.accountId,
       agentId: accounts.agentId,
+      agentFirstName: agents.firstName,
+      agentLastName: agents.lastName,
       name: accounts.name,
       status: accounts.status,
       createdAt: accounts.createdAt,
       updatedAt: accounts.updatedAt,
     })
     .from(accounts)
+    .leftJoin(agents, eq(accounts.agentId, agents.id))
     .where(whereClause)
     .orderBy(orderDirection, asc(accounts.id))
     .limit(limit)

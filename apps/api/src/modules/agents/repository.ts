@@ -54,24 +54,9 @@ export const getNextAgentId = async (organizationId: string): Promise<string> =>
 
 export const findHouseAgentByOrganization = async (
   organizationId: string
-): Promise<AgentRow | null> => {
+): Promise<{ id: string } | null> => {
   const result = await db
-    .select({
-      id: agents.id,
-      organizationId: agents.organizationId,
-      agentId: agents.agentId,
-      firstName: agents.firstName,
-      lastName: agents.lastName,
-      govIdType: agents.govIdType,
-      govIdNumber: agents.govIdNumber,
-      email: agents.email,
-      phone: agents.phone,
-      dob: agents.dob,
-      status: agents.status,
-      isHouseAgent: agents.isHouseAgent,
-      createdAt: agents.createdAt,
-      updatedAt: agents.updatedAt,
-    })
+    .select({ id: agents.id })
     .from(agents)
     .where(
       and(
@@ -88,24 +73,9 @@ export const findHouseAgentByOrganization = async (
 export const findAgentByEmail = async (
   organizationId: string,
   email: string
-): Promise<AgentRow | null> => {
+): Promise<{ id: string } | null> => {
   const result = await db
-    .select({
-      id: agents.id,
-      organizationId: agents.organizationId,
-      agentId: agents.agentId,
-      firstName: agents.firstName,
-      lastName: agents.lastName,
-      govIdType: agents.govIdType,
-      govIdNumber: agents.govIdNumber,
-      email: agents.email,
-      phone: agents.phone,
-      dob: agents.dob,
-      status: agents.status,
-      isHouseAgent: agents.isHouseAgent,
-      createdAt: agents.createdAt,
-      updatedAt: agents.updatedAt,
-    })
+    .select({ id: agents.id })
     .from(agents)
     .where(
       and(

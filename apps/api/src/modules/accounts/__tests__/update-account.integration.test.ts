@@ -344,7 +344,7 @@ describe('PATCH /accounts/:id', () => {
         .send({ agentId: agent2.id })
         .expect(200);
 
-      expect(response.body.account.agentId).toBe(agent2.id);
+      expect(response.body.account.agent.id).toBe(agent2.id);
     });
 
     it('returns existing account for empty body', async () => {
