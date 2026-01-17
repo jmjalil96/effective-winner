@@ -77,3 +77,15 @@ export {
   listClientsQuerySchema,
   type ListClientsQuery,
 } from './clients.js';
+
+// Insurers
+export {
+  createInsurerSchema,
+  type CreateInsurerInput,
+  insurerIdParamSchema,
+  type InsurerIdParam,
+  updateInsurerSchema,
+  type UpdateInsurerInput,
+  listInsurersQuerySchema,
+  type ListInsurersQuery,
+} from './insurers.js';

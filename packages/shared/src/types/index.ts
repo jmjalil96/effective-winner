@@ -54,3 +54,12 @@ export type {
   UpdateClientResponse,
   ListClientsResponse,
 } from './clients.js';
+
+// Insurers
+export type {
+  Insurer,
+  CreateInsurerResponse,
+  GetInsurerResponse,
+  UpdateInsurerResponse,
+  ListInsurersResponse,
+} from './insurers.js';
