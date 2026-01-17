@@ -9,6 +9,7 @@ import {
   loginAndGetSession,
   createDirectSession,
   getSessionsByUserId,
+  getActiveSessionsByUserId,
 } from '../../../test/helpers/session.js';
 import { VALID_PASSWORD } from '../../../test/helpers/crypto.js';
 
@@ -108,9 +109,14 @@ describe('POST /auth/logout', () => {
 
       await supertest(app).post('/auth/logout').set('Cookie', cookie).expect(204);
 
-      // Session should be deleted (not just revoked)
+      // Session should be revoked (soft-deleted for audit trail)
+      // Total sessions still exists (for audit), but no active sessions
       const afterSessions = await getSessionsByUserId(user.id);
-      expect(afterSessions.length).toBe(0);
+      expect(afterSessions).toHaveLength(1);
+      expect(afterSessions[0]?.revokedAt).not.toBeNull();
+
+      const activeSessions = await getActiveSessionsByUserId(user.id);
+      expect(activeSessions).toHaveLength(0);
     });
 
     it('session cookie invalid after logout', async () => {
@@ -119,10 +125,10 @@ describe('POST /auth/logout', () => {
 
       await supertest(app).post('/auth/logout').set('Cookie', cookie).expect(204);
 
-      // Using the same cookie should fail
+      // Using the same cookie should fail (session revoked)
       const response = await supertest(app).get('/auth/me').set('Cookie', cookie).expect(401);
 
-      expect(response.body.error.message).toBe('Authentication required');
+      expect(response.body.error.message).toBe('Session revoked');
     });
 
     it('does not affect other user sessions', async () => {
@@ -237,10 +243,10 @@ describe('POST /auth/logout', () => {
       // Logout
       await supertest(app).post('/auth/logout').set('Cookie', oldCookie).expect(204);
 
-      // Old cookie should fail
+      // Old cookie should fail (session revoked)
       const response = await supertest(app).get('/auth/me').set('Cookie', oldCookie).expect(401);
 
-      expect(response.body.error.message).toBe('Authentication required');
+      expect(response.body.error.message).toBe('Session revoked');
     });
 
     it('multiple consecutive logouts fail after first', async () => {
@@ -250,10 +256,10 @@ describe('POST /auth/logout', () => {
       // First logout succeeds
       await supertest(app).post('/auth/logout').set('Cookie', cookie).expect(204);
 
-      // Second logout fails (session already deleted)
+      // Second logout fails (session already revoked)
       const response = await supertest(app).post('/auth/logout').set('Cookie', cookie).expect(401);
 
-      expect(response.body.error.message).toBe('Authentication required');
+      expect(response.body.error.message).toBe('Session revoked');
     });
   });
 });

@@ -96,7 +96,7 @@ export const findSessionWithContext = async (sidHash: string): Promise<SessionCo
 };
 
 export const deleteSession = async (sessionId: string): Promise<void> => {
-  await db.delete(sessions).where(eq(sessions.id, sessionId));
+  await db.update(sessions).set({ revokedAt: new Date() }).where(eq(sessions.id, sessionId));
 };
 
 export const touchSession = async (sessionId: string): Promise<void> => {

@@ -53,7 +53,11 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
       },
     };
 
-    logger.error({ err, requestId }, err.message);
+    if (err.statusCode >= 500) {
+      logger.error({ err, requestId }, err.message);
+    } else {
+      logger.warn({ err, requestId }, err.message);
+    }
     res.status(err.statusCode).json(response);
     return;
   }

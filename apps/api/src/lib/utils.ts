@@ -1,4 +1,5 @@
 import type { Request } from 'express';
+import { AppError } from '../errors/index.js';
 
 /**
  * Extracts common request metadata for service context.
@@ -17,7 +18,7 @@ export const extractRequestMeta = (req: Request) => ({
  */
 export const getValidated = (req: Request) => {
   if (!req.validated) {
-    throw new Error('Validation middleware not applied to this route');
+    throw new AppError('Validation middleware not applied to this route', 500, 'MIDDLEWARE_CONFIG_ERROR');
   }
   return req.validated;
 };
