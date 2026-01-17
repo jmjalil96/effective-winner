@@ -4,11 +4,7 @@ export {
   type AuditAction,
   type AuditContext,
   type AuditEntry,
-  log,
-  logAsync,
   logWithContext,
-  logWithContextAsync,
-  extractAuditContext,
   toAuditContext,
 } from './audit.js';
 

@@ -1,4 +1,3 @@
-import type { Request } from 'express';
 import { db } from '../../db/index.js';
 import { auditLogs } from '../../db/schema/index.js';
 import { createChildLogger } from '../../config/logger.js';
@@ -167,26 +166,7 @@ const redactSensitive = (obj: unknown, depth = 0, seen = new WeakSet()): unknown
 };
 
 // =============================================================================
-// 2. Context extractor from Express Request
-// =============================================================================
-
-export const extractAuditContext = (req: Request): AuditContext => {
-  // Use req.ip directly - Express handles x-forwarded-for parsing when trust proxy is configured
-  const session = (req as Request & { session?: { userId?: string; organizationId?: string } })
-    .session;
-
-  return {
-    organizationId: session?.organizationId ?? null,
-    actorId: session?.userId ?? null,
-    ipAddress: req.ip ?? null,
-    userAgent: req.headers['user-agent'] ?? null,
-    requestId:
-      typeof req.id === 'string' ? req.id : typeof req.id === 'number' ? String(req.id) : null,
-  };
-};
-
-// =============================================================================
-// 4. Fire-and-forget write with error logging
+// Fire-and-forget write with error logging
 // =============================================================================
 
 const writeAuditLog = async (entry: AuditEntry, ctx: AuditContext): Promise<void> => {
@@ -208,41 +188,12 @@ const writeAuditLog = async (entry: AuditEntry, ctx: AuditContext): Promise<void
 };
 
 // =============================================================================
-// 1. Core log functions
+// Log functions
 // =============================================================================
 
 /**
- * Fire-and-forget audit log with request context extraction.
+ * Fire-and-forget audit log with manual context.
  * Never throws - errors are logged internally.
- */
-export const log = (req: Request, entry: AuditEntry): void => {
-  const ctx = extractAuditContext(req);
-  writeAuditLog(entry, ctx).catch((err: unknown) => {
-    auditLogger.error(
-      { err, action: entry.action, entityType: entry.entityType },
-      'Failed to write audit log'
-    );
-  });
-};
-
-/**
- * Awaitable audit log with request context extraction.
- * Errors are logged but NOT re-thrown (audit should never fail requests).
- */
-export const logAsync = async (req: Request, entry: AuditEntry): Promise<void> => {
-  const ctx = extractAuditContext(req);
-  try {
-    await writeAuditLog(entry, ctx);
-  } catch (err: unknown) {
-    auditLogger.error(
-      { err, action: entry.action, entityType: entry.entityType },
-      'Failed to write audit log'
-    );
-  }
-};
-
-/**
- * Fire-and-forget audit log with manual context (for background jobs/system actions).
  */
 export const logWithContext = (ctx: AuditContext, entry: AuditEntry): void => {
   writeAuditLog(entry, ctx).catch((err: unknown) => {
@@ -251,18 +202,4 @@ export const logWithContext = (ctx: AuditContext, entry: AuditEntry): void => {
       'Failed to write audit log'
     );
   });
-};
-
-/**
- * Awaitable audit log with manual context.
- */
-export const logWithContextAsync = async (ctx: AuditContext, entry: AuditEntry): Promise<void> => {
-  try {
-    await writeAuditLog(entry, ctx);
-  } catch (err: unknown) {
-    auditLogger.error(
-      { err, action: entry.action, entityType: entry.entityType },
-      'Failed to write audit log'
-    );
-  }
 };
